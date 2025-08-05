@@ -1,16 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.example</groupId>
     <artifactId>JavaTetrisApp</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <!--05/8/25 SC - removed target version to remove dependency issues for jfx -->
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
-        <javafx.version>21.0.1</javafx.version>
+        <maven.compiler.release>21</maven.compiler.release>
+        <javafx.version>21.0.2</javafx.version>
+        <javafx.plugin.version>0.0.8</javafx.plugin.version>
     </properties>
 
     <dependencies>
@@ -30,6 +32,10 @@
                 <configuration>
                     <mainClass>org.example.Main</mainClass>
                 </configuration>
+                <!--05/8/25 SC - as per config doco adding execution https://drive.google.com/file/d/1S6dJ4pjDtyvzuFY5wID9uTZva1gUxSZJ/view -->
+                <executions>
+                    <execution><goals><goal>run</goal></goals></execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

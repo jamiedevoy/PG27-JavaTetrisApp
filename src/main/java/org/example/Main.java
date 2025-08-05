@@ -60,7 +60,7 @@ public class Main extends Application {
 
         VBox menuLayout = new VBox(20, playButton, configButton, highScoresButton, exitButton);
         menuLayout.setAlignment(Pos.CENTER);
-        menuLayout.setStyle("-fx-background-color: lightblue;");
+        menuLayout.setStyle("-fx-background-color: light blue;");
 
         Scene menuScene = new Scene(menuLayout, 400, 300);
         primaryStage.setTitle("Tetris Main Menu");
