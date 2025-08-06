@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -8,16 +9,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class SplashScreen {
 
-    public static void show(Stage owner, Runnable afterSplash) {
+    public static void show(Stage primaryStage, Main mainApp) {
         Stage splashStage = new Stage(StageStyle.UNDECORATED);
-        splashStage.initOwner(owner);
-        splashStage.initModality(Modality.WINDOW_MODAL);
 
         Image bgImage = null;
         try {
@@ -61,7 +59,7 @@ public class SplashScreen {
         splashStage.setScene(scene);
         splashStage.centerOnScreen();
         splashStage.show();
-
+/*
         new Thread(() -> {
             try {
                 Thread.sleep(3000);
@@ -72,5 +70,23 @@ public class SplashScreen {
                 afterSplash.run();
             });
         }).start();
+        */
+
+        Task<Void> loadTask = new Task<>() {
+            @Override
+            protected Void call() throws Exception {
+                // Simulate some work (e.g., 3 seconds)
+                Thread.sleep(5000);
+                return null;
+            }
+            @Override
+            protected void succeeded() {
+                Platform.runLater(() -> {
+                    splashStage.close();
+                    mainApp.showMainMenu();
+                });
+            }
+        };
+        new Thread(loadTask).start();
     }
 }

@@ -12,7 +12,8 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    private Stage primaryStage;
+
+    public Stage primaryStage;
 
     public static void main(String[] args) {
         launch(args);
@@ -21,19 +22,27 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
-        SplashScreen.show(primaryStage, this::showMainMenu);
+        SplashScreen.show(primaryStage, this);
     }
 
-    private void showMainMenu() {
+    // 06/08/25 - SC - Update showMainMenu() to public to cater for splashscreen passing
+    public void showMainMenu() {
         Button playButton = new Button("Play");
         Button configButton = new Button("Configuration");
         Button highScoresButton = new Button("High Scores");
         Button exitButton = new Button("Exit");
 
+        //06/8/25 - SC converted enhanced for loop as per https://lms.griffith.edu.au/courses/29105/files/7734485?wrap=1
+        /*
         playButton.setPrefWidth(200);
         configButton.setPrefWidth(200);
         highScoresButton.setPrefWidth(200);
         exitButton.setPrefWidth(200);
+         */
+        Button[] buttons = { playButton, configButton, highScoresButton, exitButton };
+        for (Button button : buttons) {
+            button.setPrefWidth(200);
+        }
 
         playButton.setOnAction(e -> GameScreen.show(primaryStage, this::showMainMenu));
 
@@ -60,7 +69,8 @@ public class Main extends Application {
 
         VBox menuLayout = new VBox(20, playButton, configButton, highScoresButton, exitButton);
         menuLayout.setAlignment(Pos.CENTER);
-        menuLayout.setStyle("-fx-background-color: light blue;");
+        //06/8/25 - SC - this was causing java.lang.ClassCastException due to colour defined. updated to corrected value
+        menuLayout.setStyle("-fx-background-color: lightblue;");
 
         Scene menuScene = new Scene(menuLayout, 400, 300);
         primaryStage.setTitle("Tetris Main Menu");
