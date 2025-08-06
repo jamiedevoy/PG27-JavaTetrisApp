@@ -10,6 +10,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.enums.TetrominoType;
 
 import java.util.Random;
 
@@ -20,6 +21,10 @@ public class GameScreen {
     private static final int GRID_HEIGHT = 20;
     private static final int NEXT_PIECE_SIZE = 5;
 
+    private static final int START_X = 3;
+    private static final double PAUSE_OVERLAY_ALPHA = 0.6;
+    private static final int PAUSE_FONT_SIZE = 48;
+
     private static final Color[] COLORS = {
             Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN, Color.RED, Color.BLUE, Color.ORANGE
     };
@@ -29,7 +34,7 @@ public class GameScreen {
 
     // Current falling piece info
     private Tetromino currentPiece;
-    private int currentX = 3;  // Starting X (middle-ish)
+    private int currentX = START_X;  // Starting X (middle-ish)
     private int currentY = 0;  // Start at top row
 
     private boolean paused = false;
@@ -85,29 +90,25 @@ public class GameScreen {
             if (e.getCode() == KeyCode.P) {
                 paused = !paused;
                 draw();
+                return;
             }
-
             if (paused) return;
 
-            if (e.getCode() == KeyCode.LEFT) {
-                moveIfValid(currentX - 1, currentY, currentPiece.shape);
-            } else if (e.getCode() == KeyCode.RIGHT) {
-                moveIfValid(currentX + 1, currentY, currentPiece.shape);
-            } else if (e.getCode() == KeyCode.DOWN) {
-                moveIfValid(currentX, currentY + 1, currentPiece.shape);
-            } else if (e.getCode() == KeyCode.UP) {
-                int[][] rotated = rotateMatrix(currentPiece.shape);
-                if (canPlace(currentX, currentY, rotated)) {
-                    currentPiece.shape = rotated;
+            switch (e.getCode()) {
+                case LEFT -> moveIfValid(currentX - 1, currentY, currentPiece.shape);
+                case RIGHT -> moveIfValid(currentX + 1, currentY, currentPiece.shape);
+                case DOWN -> moveIfValid(currentX, currentY + 1, currentPiece.shape);
+                case UP -> {
+                    int[][] rotated = rotateMatrix(currentPiece.shape);
+                    if (canPlace(currentX, currentY, rotated)) {
+                        currentPiece.shape = rotated;
+                    }
                 }
             }
             draw();
         });
-        root.requestFocus();  // Make sure keyboard events are captured
 
-        primaryStage.setTitle("Tetris - Game");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        root.requestFocus();  // Make sure keyboard events are captured
 
         // Animation timer to drop piece every 0.5 seconds
         AnimationTimer timer = new AnimationTimer() {
@@ -198,7 +199,7 @@ public class GameScreen {
 
     private void spawnNextPiece() {
         currentPiece = nextPiece;
-        currentX = 3;
+        currentX = START_X;
         currentY = 0;
         nextPiece = randomTetromino();
 
@@ -213,36 +214,8 @@ public class GameScreen {
     }
 
     private Tetromino randomTetromino() {
-        int r = random.nextInt(7);
-        switch (r) {
-            case 0: return new Tetromino(new int[][]{
-                    {1, 1, 1, 1} // I shape
-            }, 1);
-            case 1: return new Tetromino(new int[][]{
-                    {2, 2},
-                    {2, 2} // O shape
-            }, 2);
-            case 2: return new Tetromino(new int[][]{
-                    {0, 3, 0},
-                    {3, 3, 3} // T shape
-            }, 3);
-            case 3: return new Tetromino(new int[][]{
-                    {0, 4, 4},
-                    {4, 4, 0} // S shape
-            }, 4);
-            case 4: return new Tetromino(new int[][]{
-                    {5, 5, 0},
-                    {0, 5, 5} // Z shape
-            }, 5);
-            case 5: return new Tetromino(new int[][]{
-                    {6, 0, 0},
-                    {6, 6, 6} // J shape
-            }, 6);
-            default: return new Tetromino(new int[][]{
-                    {0, 0, 7},
-                    {7, 7, 7} // L shape
-            }, 7);
-        }
+        TetrominoType type = TetrominoType.values()[random.nextInt(TetrominoType.values().length)];
+        return new Tetromino(type.shape, type.colorIndex);
     }
 
     private int[][] rotateMatrix(int[][] matrix) {
@@ -293,11 +266,11 @@ public class GameScreen {
         drawNextPiece();
 
         if (paused) {
-            gcGrid.setFill(new Color(0, 0, 0, 0.6));
+            gcGrid.setFill(new Color(0, 0, 0, PAUSE_OVERLAY_ALPHA));
             gcGrid.fillRect(0, 0, GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE);
 
             gcGrid.setFill(Color.WHITE);
-            gcGrid.setFont(javafx.scene.text.Font.font(48));
+            gcGrid.setFont(javafx.scene.text.Font.font(PAUSE_FONT_SIZE));
             gcGrid.fillText("PAUSED", (GRID_WIDTH * TILE_SIZE) / 2 - 80, (GRID_HEIGHT * TILE_SIZE) / 2);
         }
     }
