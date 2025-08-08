@@ -18,7 +18,7 @@ public class GameBoard {
 
     public GameBoard() {
         spawnNewPiece();
-        nextPiece = randomTetromino();
+        //nextPiece = randomTetromino();
     }
 
     public int[][] getGrid() {
@@ -147,5 +147,11 @@ public class GameBoard {
                 grid[y][x] = 0;
             }
         }
+    }
+
+    public void setCurrentPiece(Tetromino piece, int x, int y) {
+        this.currentPiece = piece;
+        this.currentX = x;
+        this.currentY = y;
     }
 }

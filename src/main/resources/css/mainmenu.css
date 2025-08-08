@@ -1,0 +1,7 @@
+#menuLayout {
+    -fx-background-color: lightblue;
+}
+
+.button {
+    -fx-pref-width: 200px;
+}

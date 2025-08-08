@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.canvas.Canvas?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="org.example.controller.GameScreenController"
+            stylesheets="@../css/game.css">
+
+    <center>
+        <Canvas fx:id="gridCanvas" width="300" height="600"/>
+    </center>
+
+    <right>
+        <VBox spacing="10" alignment="TOP_CENTER">
+            <Canvas fx:id="nextCanvas" width="150" height="150"/>
+            <Button fx:id="backButton" text="Back to Menu"/>
+        </VBox>
+    </right>
+
+</BorderPane>

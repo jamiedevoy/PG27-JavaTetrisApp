@@ -1,7 +1,9 @@
 package org.example;
 
 import javafx.animation.AnimationTimer;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -10,12 +12,33 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.example.controller.GameScreenController;
 
 import java.util.Random;
 
 public class GameScreen {
 
-    private static final int TILE_SIZE = 30;
+    public static void show(Stage primaryStage, Runnable mainApp) {
+        try {
+            FXMLLoader loader = new FXMLLoader(GameScreen.class.getResource("/fxml/Game.fxml"));
+            Parent root = loader.load();
+
+            GameScreenController controller = loader.getController();
+            controller.start(primaryStage, mainApp);
+
+            Scene scene = new Scene(root);
+            primaryStage.setTitle("Tetris - Game");
+            primaryStage.setScene(scene);
+            primaryStage.show();
+
+            root.requestFocus(); // Ensure key events are captured
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+}
+    /*private static final int TILE_SIZE = 30;
     private static final int GRID_WIDTH = 10;
     private static final int GRID_HEIGHT = 20;
     private static final int NEXT_PIECE_SIZE = 5;
@@ -44,12 +67,12 @@ public class GameScreen {
     private GraphicsContext gcGrid;
     private GraphicsContext gcNext;
 
-    public static void show(Stage primaryStage) {
+    public static void show(Stage primaryStage, Runnable mainApp) {
         GameScreen gameScreen = new GameScreen();
-        gameScreen.start(primaryStage);
+        gameScreen.start(primaryStage, mainApp);
     }
 
-    private void start(Stage primaryStage) {
+    private void start(Stage primaryStage, Runnable mainApp) {
         Canvas gridCanvas = new Canvas(GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE);
         gcGrid = gridCanvas.getGraphicsContext2D();
 
@@ -57,7 +80,7 @@ public class GameScreen {
         gcNext = nextCanvas.getGraphicsContext2D();
 
         Button backButton = new Button("Back to Menu");
-        //backButton.setOnAction(e -> onBack.run());
+        backButton.setOnAction(e -> mainApp.run());
 
         VBox rightPane = new VBox(10);
         rightPane.setAlignment(Pos.TOP_CENTER);
@@ -333,4 +356,5 @@ public class GameScreen {
             this.colorIndex = colorIndex;
         }
     }
-}
+}*/
+
