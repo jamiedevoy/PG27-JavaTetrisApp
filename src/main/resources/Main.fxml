@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER"
+      spacing="20"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.MainController">
+    <Label text="Tetris 27"/>
+    <Button text="Play" onAction="#onPlayButtonClicked"/>
+    <Button text="Config"/>
+    <Button text="High Score" />
+    <Button text="Exit"/>
+</VBox>

@@ -44,12 +44,12 @@ public class GameScreen {
     private GraphicsContext gcGrid;
     private GraphicsContext gcNext;
 
-    public static void show(Stage primaryStage, Runnable onBack) {
+    public static void show(Stage primaryStage) {
         GameScreen gameScreen = new GameScreen();
-        gameScreen.start(primaryStage, onBack);
+        gameScreen.start(primaryStage);
     }
 
-    private void start(Stage primaryStage, Runnable onBack) {
+    private void start(Stage primaryStage) {
         Canvas gridCanvas = new Canvas(GRID_WIDTH * TILE_SIZE, GRID_HEIGHT * TILE_SIZE);
         gcGrid = gridCanvas.getGraphicsContext2D();
 
@@ -57,7 +57,7 @@ public class GameScreen {
         gcNext = nextCanvas.getGraphicsContext2D();
 
         Button backButton = new Button("Back to Menu");
-        backButton.setOnAction(e -> onBack.run());
+        //backButton.setOnAction(e -> onBack.run());
 
         VBox rightPane = new VBox(10);
         rightPane.setAlignment(Pos.TOP_CENTER);

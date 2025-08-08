@@ -1,6 +1,7 @@
 package org.example;
 
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -9,9 +10,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 
+/* OG Code
 public class Main extends Application {
-
 
     public Stage primaryStage;
 
@@ -38,7 +41,7 @@ public class Main extends Application {
         configButton.setPrefWidth(200);
         highScoresButton.setPrefWidth(200);
         exitButton.setPrefWidth(200);
-         */
+         *//*
         Button[] buttons = { playButton, configButton, highScoresButton, exitButton };
         for (Button button : buttons) {
             button.setPrefWidth(200);
@@ -76,5 +79,30 @@ public class Main extends Application {
         primaryStage.setTitle("Tetris Main Menu");
         primaryStage.setScene(menuScene);
         primaryStage.show();
+    }
+}*/
+
+
+/* Rhys Implementation */
+public class Main extends Application {
+
+    @Override
+    public void start(Stage primaryStage) {
+        try {
+            // Load Splash Screen FXML
+            FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/Splash.fxml"));
+            Stage splashStage = new Stage(fxmlLoader.getController());
+            Scene scene = new Scene(fxmlLoader.load());
+            splashStage.initStyle(StageStyle.TRANSPARENT);
+            splashStage.initModality(Modality.WINDOW_MODAL);
+            splashStage.setScene(scene);
+            splashStage.show();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

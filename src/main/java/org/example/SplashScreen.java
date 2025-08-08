@@ -1,3 +1,11 @@
+/* See
+
+ ***********************************************************
+ ****                                                   ****
+ **** see SplashController.java for splash screen stuff ****
+ ****                                                   ****
+ ***********************************************************
+
 package org.example;
 
 import javafx.application.Platform;
@@ -70,7 +78,7 @@ public class SplashScreen {
                 afterSplash.run();
             });
         }).start();
-        */
+        */ /*
 
         Task<Void> loadTask = new Task<>() {
             @Override
@@ -83,10 +91,35 @@ public class SplashScreen {
             protected void succeeded() {
                 Platform.runLater(() -> {
                     splashStage.close();
-                    mainApp.showMainMenu();
+                    //mainApp.showMainMenu();
                 });
             }
         };
         new Thread(loadTask).start();
     }
 }
+
+/*Rhys Implementation
+public class Splash {
+    public static void showSplash(Stage owner, Runnable runAfter) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("Splash.fxml"));
+        Stage splashStage = new Stage(fxmlLoader.getController());
+        splashStage.initStyle(StageStyle.TRANSPARENT);
+        splashStage.initOwner(owner);
+        Scene scene = new Scene(fxmlLoader.load());
+        splashStage.setScene(scene);
+        splashStage.show();
+
+        new Thread(() -> {
+            try {
+                Thread.sleep(3000);
+            } catch (InterruptedException ignored) {
+            }
+            Platform.runLater(() -> {
+                splashStage.close();
+                runAfter.run();
+            });
+        }).start();
+    }
+}
+*/
