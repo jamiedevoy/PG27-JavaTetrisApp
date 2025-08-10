@@ -37,11 +37,13 @@ public class HighScoreScreen {
         bottomBox.setSpacing(10);
 
         BorderPane layout = new BorderPane();
+        layout.getStyleClass().add("border-pane-background");
         layout.setPadding(new Insets(15));
         layout.setCenter(table);
         layout.setBottom(bottomBox);
 
         Scene scene = new Scene(layout, 400, 300);
+        scene.getStylesheets().add(HighScoreScreen.class.getResource("/styles.css").toExternalForm());
         primaryStage.setScene(scene);
     }
 

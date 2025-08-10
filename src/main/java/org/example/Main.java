@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
@@ -70,9 +71,18 @@ public class Main extends Application {
         VBox menuLayout = new VBox(20, playButton, configButton, highScoresButton, exitButton);
         menuLayout.setAlignment(Pos.CENTER);
         //06/8/25 - SC - this was causing java.lang.ClassCastException due to colour defined. updated to corrected value
-        menuLayout.setStyle("-fx-background-color: lightblue;");
+        //menuLayout.setStyle("-fx-background-color: lightblue;");
 
-        Scene menuScene = new Scene(menuLayout, 400, 300);
+        StackPane root = new StackPane();
+        root.getStyleClass().add("stack-pane-background");
+
+        root.getChildren().add(menuLayout);
+
+        Scene menuScene = new Scene(root, 400, 300);
+        menuScene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+
+        //primaryStage.setScene(menuScene);
+        //Scene menuScene = new Scene(menuLayout, 400, 300);
         primaryStage.setTitle("Tetris Main Menu");
         primaryStage.setScene(menuScene);
         primaryStage.show();
