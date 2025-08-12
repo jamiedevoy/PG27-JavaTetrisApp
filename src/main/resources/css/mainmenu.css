@@ -1,7 +1,20 @@
 #menuLayout {
-    -fx-background-color: lightblue;
+    -fx-background-color: linear-gradient(to bottom, black, darkblue);
+}
+
+.grid-Canvas {
+    -fx-background-color: orange;
 }
 
 .button {
-    -fx-pref-width: 200px;
+    -fx-font-size: 14px;
+    -fx-padding: 10px;
+    -fx-background-color: #444;
+    -fx-text-fill: white;
+    -fx-border-color: white;
+    -fx-border-width: 1px;
+}
+
+.grid-wrapper {
+    -fx-padding: 20px;
 }

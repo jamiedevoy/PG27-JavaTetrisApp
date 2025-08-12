@@ -1,20 +1,10 @@
 package org.example;
 
-import javafx.animation.AnimationTimer;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.example.controller.GameScreenController;
-
-import java.util.Random;
 
 public class GameScreen {
 
@@ -37,7 +27,7 @@ public class GameScreen {
         }
     }
 
-}
+} // Moved to
     /*private static final int TILE_SIZE = 30;
     private static final int GRID_WIDTH = 10;
     private static final int GRID_HEIGHT = 20;

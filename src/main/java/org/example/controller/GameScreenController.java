@@ -6,11 +6,9 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
-import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import org.example.controller.GameController;
 import org.example.model.GameBoard;
 import org.example.model.Tetromino;
 
@@ -99,7 +97,7 @@ public class GameScreenController {
         drawNextPiece();
 
         if (gameController.isPaused()) {
-            gcGrid.setFill(new Color(0, 0, 0, 0.6));
+            //gcGrid.setFill(new Color(0, 0, 0, 0.6));
             gcGrid.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
             gcGrid.setFill(Color.WHITE);
             gcGrid.setFont(Font.font(48));
