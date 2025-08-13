@@ -2,8 +2,9 @@ package org.example.model;
 import java.util.Random;
 
 import org.example.enums.TetrominoType;
+import org.example.interfaces.IGameBoard;
 
-public class GameBoard {
+public class GameBoard implements IGameBoard {
     public static final int GRID_WIDTH = 10;
     public static final int GRID_HEIGHT = 20;
     private static final int START_X = 3;
@@ -19,6 +20,16 @@ public class GameBoard {
     public GameBoard() {
         spawnNewPiece();
         nextPiece = randomTetromino();
+    }
+
+    @Override
+    public int getGridWidth() {
+        return GRID_WIDTH;
+    }
+
+    @Override
+    public int getGridHeight() {
+        return GRID_HEIGHT;
     }
 
     public int[][] getGrid() {

@@ -2,15 +2,15 @@ package org.example.controller;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
-import org.example.model.GameBoard;
+import org.example.interfaces.IGameBoard;
 
 public class GameController {
     private static final long FALL_INTERVAL_NS = 500_000_000;
     private long lastFallTime = 0;
     private boolean paused = false;
-    private final GameBoard board;
+    private final IGameBoard board;
 
-    public GameController(GameBoard board) {
+    public GameController(IGameBoard board) {
         this.board = board;
     }
 

@@ -13,7 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
 import org.example.controller.GameController;
-import org.example.model.GameBoard;
+import org.example.interfaces.IGameBoard;
 import org.example.model.Tetromino;
 
 public class GameScreen {
@@ -26,46 +26,65 @@ public class GameScreen {
             Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN, Color.RED, Color.BLUE, Color.ORANGE
     };
 
-    private final GameBoard board = new GameBoard();
-    private final GameController controller = new GameController(board);
+    private final IGameBoard board;
+    private final GameController controller;
 
     private GraphicsContext gcGrid;
     private GraphicsContext gcNext;
 
-    public static void show(Stage primaryStage, Runnable onBack) {
-        new GameScreen().start(primaryStage, onBack);
+    public GameScreen(IGameBoard board) {
+        this.board = board;
+        this.controller = new GameController(board);
+    }
+
+    public void show(Stage primaryStage, Runnable onBack) {
+        start(primaryStage, onBack);
     }
 
     private void start(Stage primaryStage, Runnable onBack) {
-        Canvas gridCanvas = new Canvas(GameBoard.GRID_WIDTH * TILE_SIZE, GameBoard.GRID_HEIGHT * TILE_SIZE);
+        // --- Game grid canvas ---
+        Canvas gridCanvas = new Canvas(board.getGridWidth() * TILE_SIZE, board.getGridHeight() * TILE_SIZE);
         gcGrid = gridCanvas.getGraphicsContext2D();
+        gridCanvas.setEffect(new DropShadow(15, Color.rgb(0, 0, 0, 0.7)));
 
+        StackPane centerPane = new StackPane(gridCanvas);
+        centerPane.setAlignment(Pos.CENTER);
+        centerPane.setPadding(Insets.EMPTY); // Override the root padding so we can move pieces fully R, L
+        centerPane.getStyleClass().add("grid-container");
+
+        // --- Next piece canvas ---
         Canvas nextCanvas = new Canvas(NEXT_PIECE_SIZE * TILE_SIZE, NEXT_PIECE_SIZE * TILE_SIZE);
         gcNext = nextCanvas.getGraphicsContext2D();
 
         StackPane nextCanvasWrapper = new StackPane(nextCanvas);
-        nextCanvasWrapper.setPadding(new Insets(10));
-        nextCanvasWrapper.setStyle("-fx-background-color: BLACK; -fx-background-radius: 5;");
+        nextCanvasWrapper.setPadding(Insets.EMPTY);
+        nextCanvasWrapper.setStyle("-fx-background-color: transparent;");
         nextCanvasWrapper.setEffect(new DropShadow(15, Color.rgb(0, 0, 0, 0.7)));
 
+        // --- Back button ---
         Button backButton = new Button("Back to Menu");
+        backButton.getStyleClass().add("arcade-button");
         backButton.setOnAction(e -> onBack.run());
 
+        // --- Right pane with next canvas on top and button at bottom ---
         VBox rightPane = new VBox(10);
         rightPane.setAlignment(Pos.TOP_CENTER);
-        rightPane.getChildren().addAll(nextCanvasWrapper, backButton);
 
-        StackPane centerPane = new StackPane(gridCanvas);
-        centerPane.setPadding(new Insets(20));
-        centerPane.setAlignment(Pos.CENTER);
-        gridCanvas.setEffect(new DropShadow(15, Color.rgb(0, 0, 0, 0.7)));
+        // Spacer to push button all the way down
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
 
+        rightPane.getChildren().addAll(nextCanvasWrapper, spacer, backButton);
+        rightPane.setPadding(new Insets(10, 0, 0, 0));
+
+        // --- Root pane ---
         BorderPane root = new BorderPane();
         root.getStyleClass().add("border-pane-background");
-        root.setCenter(centerPane); // 10/8/25 - SC - this was originally pointing to gridcanvas causing canvas to be across the entire left screen
+        root.setPadding(new Insets(15, 20, 15, 20));
+        root.setCenter(centerPane);
         root.setRight(rightPane);
-        //root.setStyle("-fx-background-color: #4290F580;");
 
+        // --- Scene ---
         Scene scene = new Scene(root);
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         scene.setOnKeyPressed(e -> {
@@ -81,6 +100,7 @@ public class GameScreen {
         root.requestFocus();
         scene.setOnMouseClicked(e -> root.requestFocus());
 
+        // --- Animation timer ---
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
@@ -92,21 +112,18 @@ public class GameScreen {
     }
 
     private void draw() {
-        double width = GameBoard.GRID_WIDTH * TILE_SIZE;
-        double height = GameBoard.GRID_HEIGHT * TILE_SIZE;
+        double width = board.getGridWidth()  * TILE_SIZE;
+        double height = board.getGridHeight()  * TILE_SIZE;
 
-        // this is for the background
-        gcGrid.setFill(Color.web("#4290f5", 0.3));
+        gcGrid.setFill(Color.BLACK);
         gcGrid.fillRect(0, 0, width, height);
 
-        // then we draw our blocks
         int[][] grid = board.getGrid();
-        for (int y = 0; y < GameBoard.GRID_HEIGHT; y++) {
-            for (int x = 0; x < GameBoard.GRID_WIDTH; x++) {
+        for (int y = 0; y < board.getGridHeight(); y++) {
+            for (int x = 0; x < board.getGridWidth(); x++) {
                 if (grid[y][x] != 0) {
                     gcGrid.setFill(COLORS[grid[y][x] - 1]);
                     gcGrid.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    //gcGrid.setStroke(Color.WHITE);
                     gcGrid.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
             }
@@ -117,10 +134,10 @@ public class GameScreen {
 
         if (controller.isPaused()) {
             gcGrid.setFill(new Color(0, 0, 0, PAUSE_OVERLAY_ALPHA));
-            gcGrid.fillRect(0, 0, GameBoard.GRID_WIDTH * TILE_SIZE, GameBoard.GRID_HEIGHT * TILE_SIZE);
+            gcGrid.fillRect(0, 0, board.getGridWidth() * TILE_SIZE, board.getGridHeight() * TILE_SIZE);
             gcGrid.setFill(Color.WHITE);
             gcGrid.setFont(Font.font(PAUSE_FONT_SIZE));
-            gcGrid.fillText("PAUSED", (GameBoard.GRID_WIDTH * TILE_SIZE) / 2 - 80, (GameBoard.GRID_HEIGHT * TILE_SIZE) / 2);
+            gcGrid.fillText("PAUSED", (board.getGridWidth() * TILE_SIZE) / 2 - 80, (board.getGridHeight() * TILE_SIZE) / 2);
         }
     }
 
@@ -132,7 +149,6 @@ public class GameScreen {
                 for (int col = 0; col < shape[row].length; col++) {
                     if (shape[row][col] != 0) {
                         gcGrid.fillRect((x + col) * TILE_SIZE, (y + row) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                        //gcGrid.setStroke(Color.BLACK);
                         gcGrid.strokeRect((x + col) * TILE_SIZE, (y + row) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     }
                 }
@@ -153,7 +169,6 @@ public class GameScreen {
                 for (int col = 0; col < shape[row].length; col++) {
                     if (shape[row][col] != 0) {
                         gcNext.fillRect((col + offsetX) * TILE_SIZE, (row + offsetY) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                        //gcNext.setStroke(Color.BLACK);
                         gcNext.strokeRect((col + offsetX) * TILE_SIZE, (row + offsetY) * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     }
                 }
