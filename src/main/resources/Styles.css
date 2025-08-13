@@ -7,5 +7,32 @@
 }
 
 .border-pane-background {
-  -fx-background-color: linear-gradient( from 0% 0% to 0% 100%,BLACK,#0d1a33);
+  -fx-background-color: black;
+}
+
+.grid-container {
+    -fx-background-color: black;
+    -fx-border-color: #9b30ff;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+}
+
+
+.arcade-button {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #d39aff;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #9b30ff;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+    -fx-cursor: hand;
+}
+
+.arcade-button:hover {
+    -fx-effect: dropshadow(gaussian, #d39aff, 12, 0.7, 0, 0);
 }

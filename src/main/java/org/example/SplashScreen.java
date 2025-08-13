@@ -59,18 +59,6 @@ public class SplashScreen {
         splashStage.setScene(scene);
         splashStage.centerOnScreen();
         splashStage.show();
-/*
-        new Thread(() -> {
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException ignored) {
-            }
-            Platform.runLater(() -> {
-                splashStage.close();
-                afterSplash.run();
-            });
-        }).start();
-        */
 
         Task<Void> loadTask = new Task<>() {
             @Override

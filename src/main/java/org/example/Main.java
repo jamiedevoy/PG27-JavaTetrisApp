@@ -10,6 +10,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.example.interfaces.IGameBoard;
+import org.example.model.GameBoard;
 
 public class Main extends Application {
 
@@ -33,19 +35,16 @@ public class Main extends Application {
         Button highScoresButton = new Button("High Scores");
         Button exitButton = new Button("Exit");
 
-        //06/8/25 - SC converted enhanced for loop as per https://lms.griffith.edu.au/courses/29105/files/7734485?wrap=1
-        /*
-        playButton.setPrefWidth(200);
-        configButton.setPrefWidth(200);
-        highScoresButton.setPrefWidth(200);
-        exitButton.setPrefWidth(200);
-         */
         Button[] buttons = { playButton, configButton, highScoresButton, exitButton };
         for (Button button : buttons) {
             button.setPrefWidth(200);
+            button.getStyleClass().add("arcade-button");
         }
 
-        playButton.setOnAction(e -> GameScreen.show(primaryStage, this::showMainMenu));
+        playButton.setOnAction(e -> {
+            IGameBoard board = new GameBoard();
+            new GameScreen(board).show(primaryStage, this::showMainMenu);
+        });
 
         configButton.setOnAction(e -> ConfigScreen.show(primaryStage, this::showMainMenu));
 
