@@ -5,7 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
-import org.example.controller.MainController;
+import org.example.controllers.MainController;
 
 
 public class Main extends Application {

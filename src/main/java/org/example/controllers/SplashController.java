@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controllers;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;

@@ -1,4 +1,4 @@
-package org.example.controller;
+package org.example.controllers;
 
 import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
@@ -6,6 +6,8 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -14,6 +16,8 @@ import org.example.model.Tetromino;
 
 public class GameScreenController {
 
+    @FXML private BorderPane gameLayout;
+    @FXML private StackPane gridWrapper;
     @FXML private Canvas gridCanvas;
     @FXML private Canvas nextCanvas;
     @FXML private Button backButton;
@@ -31,6 +35,8 @@ public class GameScreenController {
             Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN, Color.RED, Color.BLUE, Color.ORANGE
     };
 
+    public void initialize() {}
+
     public void start(Stage stage, Runnable mainApp) {
         this.primaryStage = stage;
         this.mainApp = mainApp;
@@ -43,14 +49,9 @@ public class GameScreenController {
 
         backButton.setOnAction(e -> mainApp.run());
 
-        gridCanvas.setFocusTraversable(true);
-        gridCanvas.requestFocus();
+        Platform.runLater(() -> gridCanvas.requestFocus());
 
         gridCanvas.setOnKeyPressed(e -> gameController.handleKey(e.getCode()));
-
-        Platform.runLater(() -> {
-            gridCanvas.requestFocus();
-        });
 
         AnimationTimer timer = new AnimationTimer() {
             @Override
@@ -97,7 +98,7 @@ public class GameScreenController {
         drawNextPiece();
 
         if (gameController.isPaused()) {
-            //gcGrid.setFill(new Color(0, 0, 0, 0.6));
+            gcGrid.setFill(new Color(0, 0, 0, 0.6));
             gcGrid.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
             gcGrid.setFill(Color.WHITE);
             gcGrid.setFont(Font.font(48));

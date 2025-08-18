@@ -1,11 +1,96 @@
 /* styles.css */
-.stack-pane-background {
+/* Styles main menu background */
+#menuLayout {
     -fx-background-image: url('/images/tetris.jpg');
     -fx-background-repeat: no-repeat;
     -fx-background-size: cover;
     -fx-background-position: center center;
 }
 
-.border-pane-background {
-  -fx-background-color: linear-gradient( from 0% 0% to 0% 100%,BLACK,#0d1a33);
+/* Styles game screen background */
+#gameLayout {
+    -fx-background-color: black;
+}
+
+/* Styles Splash screen Text - See splash.fxml to alter text */
+#splashLabel {
+    -fx-text-fill: white;
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+}
+
+.gameLabels {
+    -fx-text-fill: #d39aff;
+}
+
+/* Styles boarder around anything - See respective fxml to alter margins */
+.neon-wrapper {
+    -fx-background-color: black;
+    -fx-border-color: #9b30ff;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+}
+
+/* Styles Buttons - Size and shape are altered in each FXML implementing a button */
+.button {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #d39aff;
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 5;
+    -fx-border-radius: 5;
+    -fx-border-color: #9b30ff;
+    -fx-border-width: 2;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+    -fx-cursor: hand;
+}
+
+/* Styles Hover effect on buttons */
+.button:hover {
+    -fx-effect: dropshadow(gaussian, #d39aff, 12, 0.7, 0, 0);
+}
+
+.slider {
+    -fx-background-color: transparent;
+}
+
+/* Slider Styles */
+.slider .track {
+    -fx-background-color: #d39aff;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(gaussian, #d39aff, 3, 0.5, 0, 0);
+}
+
+.slider .thumb {
+    -fx-background-color: #9b30ff;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+}
+
+.check-box {
+    -fx-background-color: Black;
+}
+
+.check-box .box {
+    -fx-background-color: Black;
+    -fx-border-color: #9b30ff;
+    -fx-border-width: 2px;
+    -fx-border-radius: 3px;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+}
+
+.check-box:selected .box{
+    -fx-background-color: Black;
+    -fx-border-color: #9b30ff;
+    -fx-effect: dropshadow(gaussian, #9b30ff, 6, 0.5, 0, 0);
+}
+
+/* Custom Tick */
+.check-box:selected .box .mark {
+    -fx-background-color: #9b30ff;
+    -fx-shape: "M 0 3 L 4 6 L 8 0 L 4 4";
 }

@@ -4,7 +4,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.controller.GameScreenController;
+import org.example.controllers.GameScreenController;
 
 public class GameScreen {
 
@@ -21,7 +21,7 @@ public class GameScreen {
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            root.requestFocus(); // Ensure key events are captured
+            //root.requestFocus(); // Ensure key events are captured
         } catch (Exception e) {
             e.printStackTrace();
         }

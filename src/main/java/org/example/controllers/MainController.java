@@ -1,10 +1,7 @@
-package org.example.controller;
+package org.example.controllers;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import org.example.ConfigScreen;
 import org.example.GameScreen;
 import org.example.HighScoreScreen;
@@ -50,8 +47,8 @@ public class MainController {
     }
 
 
-    @FXML
-    protected void onPlayButtonClicked() {
+    /*@FXML
+    protected void showScreen(Stage primaryStage, Runnable mainApp) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Game.fxml"));
             Stage mainStage = new Stage(fxmlLoader.getController());
@@ -63,6 +60,6 @@ public class MainController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
 }

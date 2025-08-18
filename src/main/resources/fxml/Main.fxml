@@ -3,14 +3,16 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<!-- Verticel box holding screen elements -->
 <VBox alignment="CENTER" spacing="20"
       xmlns="http://javafx.com/javafx"
       xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.controller.MainController"
+      fx:controller="org.example.controllers.MainController"
       fx:id="menuLayout"
-      stylesheets="@../css/mainmenu.css"
+      stylesheets="@../Styles.css"
       prefWidth="400" prefHeight="300">
 
+    <!-- Setting button ids for reference in MainController -->
     <Button fx:id="playButton" text="Play"/>
     <Button fx:id="configButton" text="Configuration"/>
     <Button fx:id="highScoresButton" text="High Scores"/>

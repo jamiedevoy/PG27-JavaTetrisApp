@@ -1,27 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.canvas.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="menuLayout"
-            stylesheets="@../css/mainmenu.css"
+<!-- Border pane ensures contents are scaled and displayed accordingly -->
+<BorderPane fx:id="gameLayout"
+            stylesheets="@../Styles.css"
             xmlns="http://javafx.com/javafx/17.0.12"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.controller.GameScreenController">
+            fx:controller="org.example.controllers.GameScreenController">
 
+    <!-- Centre pane -->
     <center>
-        <StackPane fx:id="gridWrapper" styleClass="grid-wrapper">
-            <Canvas fx:id="gridCanvas" styleClass="grid-Canvas" height="600" width="300" />
+        <!-- This stack pane acts as a wrapper to allow for a stylised boarder on the game board -->
+        <StackPane fx:id="gridWrapper" styleClass="neon-wrapper">
+            <!-- Canvas on which the game board it created on -->
+            <Canvas fx:id="gridCanvas" height="600" width="300" />
+            <!-- allow for spacing around game board -->
+            <BorderPane.margin>
+                <Insets bottom="20.0" left="20.0" top="20.0" />
+            </BorderPane.margin>
         </StackPane>
 
     </center>
 
+    <!-- Right Pane -->
     <right>
-        <VBox alignment="TOP_CENTER" spacing="10">
-            <Canvas fx:id="nextCanvas" height="150" width="150" />
-            <Button fx:id="backButton" text="Back to Menu" />
+        <!-- Element container -->
+        <VBox spacing="10">
+
+            <!-- Wrapper for Neon style boarder -->
+            <StackPane styleClass="neon-wrapper">
+                <!-- set element parameters -->
+                <Canvas fx:id="nextCanvas" height="150" width="150" focusTraversable="false" />
+            </StackPane>
+
+            <!-- spacer to push button to bottom - POTENTIAL CHANGE TO SCORE BOARD-->
+            <Region VBox.vgrow="ALWAYS" styleClass="neon-wrapper" />
+
+            <!-- Button... -->
+            <Button fx:id="backButton" text="Back to Menu" focusTraversable="false"/>
+
+            <!-- Allow spacing around elements -->
+            <BorderPane.margin>
+                <!-- I lost my marbles on this one -->
+                <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            </BorderPane.margin>
         </VBox>
+
     </right>
 
 </BorderPane>
