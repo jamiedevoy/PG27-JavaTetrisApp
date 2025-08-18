@@ -1,17 +1,8 @@
 org\example\enums\TetrominoType.class
-org\example\controller\SplashController$1.class
 org\example\HighScoreScreen.class
 org\example\ConfigScreen.class
 org\example\controller\GameController$1.class
 org\example\GameScreen.class
 org\example\model\Tetromino.class
-org\example\Main.class
-org\example\controller\GameScreenController$1.class
-org\example\ExitScreen.class
-org\example\model\GameBoard.class
-org\example\controller\SplashController.class
-org\example\controller\GameController.class
-org\example\controller\GameScreenController.class
 org\example\HighScoreScreen$ScoreEntry.class
-org\example\controller\MainController.class
 org\example\SplashScreen.class
