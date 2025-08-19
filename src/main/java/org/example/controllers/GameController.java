@@ -1,31 +1,34 @@
-package org.example.controller;
+package org.example.controllers;
 
 import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
-import org.example.model.GameBoard;
+import org.example.interfaces.IGameBoard;
 
 public class GameController {
     private static final long FALL_INTERVAL_NS = 500_000_000;
     private long lastFallTime = 0;
     private boolean paused = false;
-    private final GameBoard board;
+    private final IGameBoard board;
 
-    public GameController(GameBoard board) {
+    public GameController(IGameBoard board) {
         this.board = board;
     }
 
     public void handleKey(KeyCode code) {
+        //System.out.println(code.toString());// debug
+        //System.out.println(board.getCurrentX());// debug
         if (code == KeyCode.P) {
             paused = !paused;
             return;
         }
         if (paused) return;
 
+        // Added WASD
         switch (code) {
-            case LEFT -> board.move(-1, 0);
-            case RIGHT -> board.move(1, 0);
-            case DOWN -> board.move(0, 1);
-            case UP -> board.rotatePiece();
+            case LEFT, A -> board.move(-1, 0);
+            case RIGHT, D -> board.move(1, 0);
+            case DOWN, S -> board.move(0, 1);
+            case UP, W -> board.rotatePiece();
         }
     }
 
