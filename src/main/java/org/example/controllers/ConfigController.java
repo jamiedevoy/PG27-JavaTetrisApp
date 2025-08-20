@@ -3,8 +3,9 @@ package org.example.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import org.example.model.GameSettings;
 
-public class ConfigController {
+public class ConfigController extends BaseController {
     @FXML private Slider fieldSizeSlider;
     @FXML private Label fieldSizeValue;
     @FXML private Slider levelSlider;
@@ -23,26 +24,32 @@ public class ConfigController {
         this.primaryStage = stage;
         this.mainApp = mainApp;
 
-        // show feild size value on slider change
-        fieldSizeSlider.valueProperty().addListener((o, oldVal, newVal) -> {
-            fieldSizeValue.setText(Integer.toString(newVal.intValue()));
-            // Have the thing do thing for value change
-        });
-        levelSlider.valueProperty().addListener((o, oldVal, newVal) -> {
-            levelValue.setText(Integer.toString(newVal.intValue()));
-            // more doing things
-        });
+        fieldSizeSlider.valueProperty().addListener((o, oldVal, newVal) ->
+                fieldSizeValue.setText(Integer.toString(newVal.intValue()))
+        );
+        levelSlider.valueProperty().addListener((o, oldVal, newVal) ->
+                levelValue.setText(Integer.toString(newVal.intValue()))
+        );
 
-        // back button shenanigans
-        backButton.setOnAction(e -> {mainApp.run();});
-
-        // Reset button, incorp records for this?
-        resetButton.setOnAction(e ->{setToDefault();});
+        backButton.setOnAction(e -> mainApp.run());
+        resetButton.setOnAction(e -> setToDefault());
     }
 
     public void setMainApp(Runnable mainApp, Stage primaryStage) {
         this.mainApp = mainApp;
         this.primaryStage = primaryStage;
+    }
+
+    // Wrap all getter methods
+    public GameSettings getSettings() {
+        return new GameSettings(
+                getFieldSize(),
+                getLevel(),
+                isMusicEnabled(),
+                isSoundEffectsEnabled(),
+                isAIPlayEnabled(),
+                isExtendedModeEnabled()
+        );
     }
 
     public int getFieldSize() {
@@ -70,6 +77,13 @@ public class ConfigController {
     }
 
     private void setToDefault() {
-        System.out.println("Setting default values, coming soon to a programme near you!");
+        GameSettings defaults = new GameSettings(10, 1, true, true, false, false);
+
+        fieldSizeSlider.setValue(defaults.fieldSize());
+        levelSlider.setValue(defaults.level());
+        musicCheckBox.setSelected(defaults.musicEnabled());
+        soundEffectsCheckBox.setSelected(defaults.soundEffectsEnabled());
+        aiPlayCheckBox.setSelected(defaults.aiPlayEnabled());
+        extendedModeCheckBox.setSelected(defaults.extendedModeEnabled());
     }
 }

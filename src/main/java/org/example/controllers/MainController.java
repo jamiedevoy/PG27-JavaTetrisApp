@@ -12,7 +12,7 @@ import javafx.scene.control.ButtonType;
 import javafx.application.Platform;
 
 
-public class MainController {
+public class MainController extends BaseController {
 
     @FXML private Button playButton;
     @FXML private Button configButton;
@@ -45,21 +45,4 @@ public class MainController {
         this.mainApp = mainApp;
         this.primaryStage = primaryStage;
     }
-
-
-    /*@FXML
-    protected void showScreen(Stage primaryStage, Runnable mainApp) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Game.fxml"));
-            Stage mainStage = new Stage(fxmlLoader.getController());
-            mainStage.initStyle(StageStyle.DECORATED);
-            //mainStage.initModality(Modality.WINDOW_MODAL);
-            Scene scene = new Scene(fxmlLoader.load());
-            mainStage.setScene(scene);
-            GameScreen.show(mainStage, mainApp::showMainMenu);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }*/
-
 }

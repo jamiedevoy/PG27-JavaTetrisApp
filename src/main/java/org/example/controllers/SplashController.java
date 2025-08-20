@@ -11,7 +11,7 @@ import org.example.Main;
 
 import java.util.Objects;
 
-public class SplashController {
+public class SplashController extends BaseController {
     @FXML private ImageView SplashImage;
     @FXML private Label SplashLabel;
 
@@ -19,7 +19,7 @@ public class SplashController {
     private Main mainApp;
 
     public void initialize() {
-        // Try to load splash screen image
+        // Load splash screen image
         try {
             Image splashImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/images/tetris.jpg")));
             SplashImage.setImage(splashImage);
