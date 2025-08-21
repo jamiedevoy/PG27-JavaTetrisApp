@@ -14,7 +14,7 @@ import javafx.stage.Stage;
 import org.example.model.GameBoard;
 import org.example.model.Tetromino;
 
-public class GameScreenController {
+public class GameScreenController extends BaseController {
 
     @FXML private BorderPane gameLayout;
     @FXML private StackPane gridWrapper;

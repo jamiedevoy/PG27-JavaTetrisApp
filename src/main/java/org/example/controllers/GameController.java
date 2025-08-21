@@ -4,7 +4,7 @@ import javafx.animation.AnimationTimer;
 import javafx.scene.input.KeyCode;
 import org.example.interfaces.IGameBoard;
 
-public class GameController {
+public class GameController extends BaseController {
     private static final long FALL_INTERVAL_NS = 500_000_000;
     private long lastFallTime = 0;
     private boolean paused = false;
