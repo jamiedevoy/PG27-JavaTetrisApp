@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.StackPane?>
+
+<!-- StackPane acting as container for image -->
+<StackPane  xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="org.example.controllers.SplashController"
+           stylesheets="@../Styles.css">
+    <!-- Apply image loaded in Splash controller -->
+    <ImageView fx:id="SplashImage" />
+    <!-- Splash screen text - key point to have group number, class and project name -->
+    <Label fx:id="splashLabel" text="Group: 27&#10;Class: 2006ICT&#10;Project: Tetris" />
+</StackPane>
