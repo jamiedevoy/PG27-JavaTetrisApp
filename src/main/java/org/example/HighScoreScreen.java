@@ -10,47 +10,23 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-import org.example.controllers.HighScoreManager;
-import org.example.controllers.ScoreController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
-import java.util.List;
 
 public class HighScoreScreen {
     public static void show(Stage primaryStage, Runnable onBack) {
+        TableView<ScoreEntry> table = new TableView<>();
 
-        // We will be using the ScoreController class
-        TableView<ScoreController> table = new TableView<>();
-        table.getStyleClass().add("high-score-table");
+        TableColumn<ScoreEntry, String> nameCol = new TableColumn<>("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-        // Table column for Player Name
-        TableColumn<ScoreController, String> nameCol = new TableColumn<>("Name");
-        nameCol.setCellValueFactory(new PropertyValueFactory<>("playerName"));
-
-        // Table column for Iteration
-        TableColumn<ScoreController, Integer> iterationCol = new TableColumn<>("Attempt");
-        iterationCol.setCellValueFactory(new PropertyValueFactory<>("iterationInt"));
-
-        // Table column for Score
-        TableColumn<ScoreController, Integer> scoreCol = new TableColumn<>("Score");
+        TableColumn<ScoreEntry, Integer> scoreCol = new TableColumn<>("Score");
         scoreCol.setCellValueFactory(new PropertyValueFactory<>("score"));
 
-        table.getColumns().addAll(nameCol, iterationCol, scoreCol);
+        TableColumn<ScoreEntry, Integer> levelCol = new TableColumn<>("Level");
+        levelCol.setCellValueFactory(new PropertyValueFactory<>("level"));
 
-        // Load scores from the JSON file
-        List<ScoreController> scores = HighScoreManager.loadScores();
-        table.setItems(FXCollections.observableArrayList(scores));
-
+        table.getColumns().addAll(nameCol, scoreCol, levelCol);
+        table.setItems(getDummyScores());
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         Button backButton = new Button("Back");
@@ -61,13 +37,37 @@ public class HighScoreScreen {
         bottomBox.setSpacing(10);
 
         BorderPane layout = new BorderPane();
-        layout.getStyleClass().add("border-pane-background");
         layout.setPadding(new Insets(15));
         layout.setCenter(table);
         layout.setBottom(bottomBox);
 
         Scene scene = new Scene(layout, 400, 300);
-        scene.getStylesheets().add(HighScoreScreen.class.getResource("/styles.css").toExternalForm());
         primaryStage.setScene(scene);
+    }
+
+    private static ObservableList<ScoreEntry> getDummyScores() {
+        return FXCollections.observableArrayList(
+                new ScoreEntry("Jamie", 1500, 3),
+                new ScoreEntry("Alex", 1200, 2),
+                new ScoreEntry("Sam", 1000, 1),
+                new ScoreEntry("Taylor", 950, 1),
+                new ScoreEntry("Jordan", 850, 1)
+        );
+    }
+
+    public static class ScoreEntry {
+        private final String name;
+        private final int score;
+        private final int level;
+
+        public ScoreEntry(String name, int score, int level) {
+            this.name = name;
+            this.score = score;
+            this.level = level;
+        }
+
+        public String getName() { return name; }
+        public int getScore() { return score; }
+        public int getLevel() { return level; }
     }
 }
