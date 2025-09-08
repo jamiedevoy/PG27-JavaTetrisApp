@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 import org.example.ConfigScreen;
 import org.example.GameScreen;
@@ -24,7 +25,35 @@ public class MainController extends BaseController {
 
 
     public void initialize() {
-        playButton.setOnAction(e -> GameScreen.show(primaryStage, mainApp::showMainMenu));
+        playButton.setOnAction(e -> {
+
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Player Name Required");
+            dialog.setHeaderText("Please enter your name to start the game.");
+            dialog.setContentText("Name:");
+            dialog.setGraphic(null);
+
+            dialog.showAndWait().ifPresent(playerName -> {
+
+                if (!playerName.trim().isEmpty()) {
+
+                    System.out.println("Player name entered: " + playerName);
+
+                    GameScreen.show(primaryStage, mainApp::showMainMenu, playerName);
+
+                } else {
+
+                    System.out.println("No player name was entered.");
+
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Error");
+                    errorAlert.setHeaderText(null);
+                    errorAlert.setContentText("Player name cannot be empty.");
+                    errorAlert.showAndWait();
+                }
+            });
+        });
+
         configButton.setOnAction(e -> ConfigScreen.show(primaryStage, mainApp::showMainMenu));
         highScoresButton.setOnAction(e -> HighScoreScreen.show(primaryStage, mainApp::showMainMenu));
 

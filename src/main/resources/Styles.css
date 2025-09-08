@@ -94,3 +94,56 @@
     -fx-background-color: #9b30ff;
     -fx-shape: "M 0 3 L 4 6 L 8 0 L 4 4";
 }
+
+.label-player-name {
+    -fx-text-fill: #d39aff;
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.score-list {
+    -fx-background-color: transparent;
+    -fx-border-color: #9b30ff;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-background-insets: 0;
+}
+
+.list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #d39aff;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-alignment: CENTER;
+}
+
+.high-score-table{
+     -fx-background-color: transparent;
+     -fx-border-color: #9b30ff;
+     -fx-border-width: 2px;
+     -fx-border-radius: 5px;
+     -fx-background-insets: 0;
+}
+
+.high-score-table .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.high-score-table .table-row-cell {
+    -fx-background-color: transparent;
+}
+
+.high-score-table .table-row-cell:odd,
+.high-score-table .table-row-cell:even {
+    -fx-background-color: transparent;
+}
+
+.high-score-table .table-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: #00ffff;
+    -fx-padding: 5px;
+    -fx-alignment: CENTER;
+}
+.border-pane-background {
+    -fx-background-color: #000000;
+

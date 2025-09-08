@@ -8,26 +8,28 @@ import org.example.controllers.GameScreenController;
 
 public class GameScreen {
 
-    public static void show(Stage primaryStage, Runnable mainApp) {
+    public static void show(Stage primaryStage, Runnable mainApp, String playerName) {
         try {
             FXMLLoader loader = new FXMLLoader(GameScreen.class.getResource("/fxml/Game.fxml"));
             Parent root = loader.load();
 
             GameScreenController controller = loader.getController();
-            controller.start(primaryStage, mainApp);
+            // Pass the player's name to the controller's start method
+            controller.start(primaryStage, mainApp, playerName);
 
             Scene scene = new Scene(root);
             primaryStage.setTitle("Tetris - Game");
             primaryStage.setScene(scene);
             primaryStage.show();
 
-            //root.requestFocus(); // Ensure key events are captured
+            root.requestFocus(); // Ensure key events are captured
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+}
 
-} // Moved to
+// Moved to
     /*private static final int TILE_SIZE = 30;
     private static final int GRID_WIDTH = 10;
     private static final int GRID_HEIGHT = 20;

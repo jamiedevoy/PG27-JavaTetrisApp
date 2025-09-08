@@ -1,14 +1,23 @@
 package org.example.model;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.example.enums.TetrominoType;
 import org.example.interfaces.IGameBoard;
+import org.example.controllers.ScoreController;
+import org.example.interfaces.ScoreUpdateListener;
 
 public class GameBoard implements IGameBoard {
+
+
     public static final int GRID_WIDTH = 10;
     public static final int GRID_HEIGHT = 20;
     private static final int START_X = 3;
-
+    public int iterationInt = 1;
+    public int iterationScore = 0;
+    ArrayList<ScoreController> scores = new ArrayList<>();
+    private String playerName;
     private final int[][] grid = new int[GRID_HEIGHT][GRID_WIDTH];
     private final Random random = new Random();
 
@@ -17,7 +26,23 @@ public class GameBoard implements IGameBoard {
     private int currentX;
     private int currentY;
 
-    public GameBoard() {
+
+    // The list of listeners is still here
+    private List<ScoreUpdateListener> scoreUpdateListeners = new ArrayList<>();
+
+    // Method to add a listener
+    public void addScoreUpdateListener(ScoreUpdateListener listener) {
+        scoreUpdateListeners.add(listener);
+    }
+
+    // Method to notify all listeners
+    private void notifyScoreListeners() {
+        for (ScoreUpdateListener listener : scoreUpdateListeners) {
+            listener.onScoreUpdated(this.scores);
+        }
+    }
+    public GameBoard(String playerName) {
+        this.playerName = playerName;
         spawnNewPiece();
         //nextPiece = randomTetromino();
     }
@@ -86,7 +111,8 @@ public class GameBoard implements IGameBoard {
         nextPiece = randomTetromino();
 
         if (!canPlace(currentX, currentY, currentPiece.getShape())) {
-            clearBoard(); // Game over placeholder
+            clearBoard();
+
         }
     }
 
@@ -138,6 +164,8 @@ public class GameBoard implements IGameBoard {
                 }
             }
             if (full) {
+                iterationScore++;
+                System.out.println("Iteration Score:" + iterationScore);
                 removeRow(y);
                 y++;
             }
@@ -154,10 +182,26 @@ public class GameBoard implements IGameBoard {
     }
 
     private void clearBoard() {
+        scores.add(new ScoreController(playerName, iterationInt, iterationScore));
+        iterationInt++;
+        System.out.println("Attempt Iteration:" + iterationInt);
+        // We reset our score based on clearing board
+        iterationScore = 0;
+        notifyScoreListeners();
+        System.out.println("Attempt Count:" + iterationScore);
+
         for (int y = 0; y < GRID_HEIGHT; y++) {
             for (int x = 0; x < GRID_WIDTH; x++) {
                 grid[y][x] = 0;
+
             }
         }
+    }
+    public int getCurrentScore() {
+        return iterationScore;
+    }
+
+    public ArrayList<ScoreController> getScores() {
+        return scores;
     }
 }
