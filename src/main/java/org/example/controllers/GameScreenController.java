@@ -9,167 +9,250 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
-import org.example.HighScoreScreen;
+import org.example.interfaces.ScoreUpdateListener;
 import org.example.model.GameBoard;
 import org.example.model.Tetromino;
-import org.example.interfaces.ScoreUpdateListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameScreenController extends BaseController implements ScoreUpdateListener {
 
     @FXML private BorderPane gameLayout;
-    @FXML private StackPane gridWrapper;
-    @FXML private Canvas gridCanvas;
-    @FXML private Canvas nextCanvas;
-    @FXML private Button backButton;
-    @FXML private Label playerNameLabel; // Added this label
-    @FXML private ListView<ScoreController> scoreView;
-    @FXML private Label currentScore;
 
-    private GraphicsContext gcGrid;
-    private GraphicsContext gcNext;
+    // Layout nodes to toggle for 1P vs 2P
+    @FXML private HBox playersRow;
+    @FXML private VBox p1Col;
+    @FXML private VBox p2Col;
+    @FXML private VBox p2ScoresWrapper;
+
+    // P1 canvases & UI
+    @FXML private Canvas gridCanvasP1;
+    @FXML private Canvas nextCanvasP1;
+    @FXML private Label currentScoreP1;
+    @FXML private ListView<ScoreController> scoreViewP1;
+
+    // P2 canvases & UI
+    @FXML private Canvas gridCanvasP2;
+    @FXML private Canvas nextCanvasP2;
+    @FXML private Label currentScoreP2;
+    @FXML private ListView<ScoreController> scoreViewP2;
+
+    @FXML private Button backButton;
+
+    // GCs
+    private GraphicsContext gcP1;
+    private GraphicsContext gcNextP1;
+    private GraphicsContext gcP2;
+    private GraphicsContext gcNextP2;
+
     private Stage primaryStage;
     private Runnable mainApp;
 
-    private GameBoard gameBoard;
-    private GameController gameController;
-    private ObservableList<ScoreController> observableScores;
+    // Boards & controllers
+    private GameBoard gameBoard1;
+    private GameController gameController1;
+
+    private boolean twoPlayerMode = false;
+    private GameBoard gameBoard2;
+    private GameController gameController2;
+
+    // attempt lists
+    private ObservableList<ScoreController> observableScoresP1;
+    private ObservableList<ScoreController> observableScoresP2;
 
     private static final int TILE_SIZE = 30;
     private static final Color[] COLORS = {
-            Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN, Color.RED, Color.BLUE, Color.ORANGE
+            Color.CYAN, Color.YELLOW, Color.PURPLE, Color.GREEN,
+            Color.RED, Color.BLUE, Color.ORANGE
     };
+
+    private boolean globallyPaused = false;
 
     @FXML
     public void initialize() {
-        // This is guaranteed to run after FXML fields are injected.
-        scoreView.setCellFactory(param -> new javafx.scene.control.ListCell<ScoreController>() {
+        // list cell renderers
+        scoreViewP1.setCellFactory(param -> new ListCell<ScoreController>() {
             @Override
             protected void updateItem(ScoreController item, boolean empty) {
                 super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText("Attempt " + item.getIterationInt() + ": " + item.getScore());
-
-                }
+                setText(empty || item == null ? null : "Attempt " + item.getIterationInt() + ": " + item.getScore());
+            }
+        });
+        scoreViewP2.setCellFactory(param -> new ListCell<ScoreController>() {
+            @Override
+            protected void updateItem(ScoreController item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : "Attempt " + item.getIterationInt() + ": " + item.getScore());
             }
         });
     }
 
-    // Updated start method to accept the player name
+    // keep legacy signature
     public void start(Stage stage, Runnable mainApp, String playerName) {
+        start(stage, mainApp, playerName, false);
+    }
+
+    public void start(Stage stage, Runnable mainApp, String playerName, boolean twoPlayer) {
         this.primaryStage = stage;
         this.mainApp = mainApp;
+        this.twoPlayerMode = twoPlayer;
 
-        gcGrid = gridCanvas.getGraphicsContext2D();
-        gcNext = nextCanvas.getGraphicsContext2D();
+        // GCs
+        gcP1 = gridCanvasP1.getGraphicsContext2D();
+        gcNextP1 = nextCanvasP1.getGraphicsContext2D();
 
-        gameBoard = new GameBoard(playerName);
-        gameController = new GameController(gameBoard);
+        if (twoPlayerMode) {
+            gcP2 = gridCanvasP2.getGraphicsContext2D();
+            gcNextP2 = nextCanvasP2.getGraphicsContext2D();
+        }
 
-        playerNameLabel.setText("Player: " + playerName);
-        playerNameLabel.setText("Score: " + playerName);
+        // Boards & controllers
+        gameBoard1 = new GameBoard(twoPlayerMode ? "Player 1" : playerName);
+        gameController1 = new GameController(gameBoard1, false);
 
-        // Initialize the ObservableList using the data from the GameBoard
-        observableScores = FXCollections.observableArrayList(gameBoard.getScores());
-        scoreView.setItems(observableScores);
-        gameBoard.addScoreUpdateListener(this);
+        if (twoPlayerMode) {
+            gameBoard2 = new GameBoard("Player 2");
+            gameController2 = new GameController(gameBoard2, true);
+        }
 
+        // Show/hide P2 column and P2 scores based on mode
+        p2Col.setManaged(twoPlayerMode);
+        p2Col.setVisible(twoPlayerMode);
+        p2ScoresWrapper.setManaged(twoPlayerMode);
+        p2ScoresWrapper.setVisible(twoPlayerMode);
+
+        // Attempts lists
+        observableScoresP1 = FXCollections.observableArrayList(gameBoard1.getScores());
+        scoreViewP1.setItems(observableScoresP1);
+        gameBoard1.addScoreUpdateListener(newScores -> onScoreUpdatedP1(newScores));
+
+        if (twoPlayerMode) {
+            observableScoresP2 = FXCollections.observableArrayList(gameBoard2.getScores());
+            scoreViewP2.setItems(observableScoresP2);
+            gameBoard2.addScoreUpdateListener(newScores -> onScoreUpdatedP2(newScores));
+        }
+
+        // Back: merge & save scores, return to menu
         backButton.setOnAction(e -> {
-            // current game sessions scores are fetched
-            java.util.List<org.example.controllers.ScoreController> newScores = gameBoard.getScores();
-
-            // I then initialise the target where i want to load the scores via highscoremanager
-            java.util.List<org.example.controllers.ScoreController> allScores =  org.example.controllers.HighScoreManager.loadScores();
-
-            // the scores are now appended
+            List<ScoreController> newScores = new ArrayList<>(gameBoard1.getScores());
+            if (twoPlayerMode && gameBoard2 != null) {
+                newScores.addAll(gameBoard2.getScores());
+            }
+            List<ScoreController> allScores = HighScoreManager.loadScores();
             allScores.addAll(newScores);
-
-            // sorting is done to the array so that newest item is displayed
             allScores.sort((s1, s2) -> Integer.compare(s2.getScore(), s1.getScore()));
-
-            // the scores are then saved
-            org.example.controllers.HighScoreManager.saveScores(allScores);
-
-
+            HighScoreManager.saveScores(allScores);
             mainApp.run();
         });
 
-        Platform.runLater(() -> gridCanvas.requestFocus());
-        gameLayout.setOnMouseClicked(event -> gridCanvas.requestFocus());
-        gridCanvas.setOnKeyPressed(e -> gameController.handleKey(e.getCode()));
+        // Focus & keys
+        Platform.runLater(() -> gridCanvasP1.requestFocus());
+        gameLayout.setOnMouseClicked(event -> gridCanvasP1.requestFocus());
 
+        gridCanvasP1.setOnKeyPressed(e -> {
+            switch (e.getCode()) {
+                case P -> {
+                    globallyPaused = !globallyPaused;
+                    gameController1.setPaused(globallyPaused);
+                    if (twoPlayerMode && gameController2 != null) {
+                        gameController2.setPaused(globallyPaused);
+                    }
+                }
+                default -> {
+                    gameController1.handleKey(e.getCode());
+                    if (twoPlayerMode) gameController2.handleKey(e.getCode());
+                }
+            }
+        });
+
+        // Main loop
         AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                gameController.update(now);
+                if (!globallyPaused) {
+                    gameController1.update(now);
+                    if (twoPlayerMode && gameController2 != null) {
+                        gameController2.update(now);
+                    }
+                }
                 draw();
             }
         };
         timer.start();
     }
 
-
     private void draw() {
-        currentScore.setText(String.valueOf(gameBoard.getCurrentScore()));
+        // P1
+        drawBoardAndPiece(gameBoard1, gcP1);
+        drawNextPiece(gcNextP1, gameBoard1);
+        currentScoreP1.setText("Score: " + gameBoard1.getCurrentScore());
 
-        int[][] grid = gameBoard.getGrid();
-        gcGrid.setFill(Color.BLACK);
-        gcGrid.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
+        // P2
+        if (twoPlayerMode) {
+            drawBoardAndPiece(gameBoard2, gcP2);
+            drawNextPiece(gcNextP2, gameBoard2);
+            currentScoreP2.setText("Score: " + gameBoard2.getCurrentScore());
+        }
 
+        if (globallyPaused) {
+            // Dim both canvases
+            pauseOverlay(gcP1);
+            if (twoPlayerMode) pauseOverlay(gcP2);
+        }
+    }
+
+    private void drawBoardAndPiece(GameBoard board, GraphicsContext gc) {
+        // clear background
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+
+        // locked blocks
+        int[][] grid = board.getGrid();
         for (int y = 0; y < grid.length; y++) {
             for (int x = 0; x < grid[y].length; x++) {
                 if (grid[y][x] != 0) {
-                    gcGrid.setFill(COLORS[grid[y][x] - 1]);
-                    gcGrid.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    gcGrid.setStroke(Color.BLACK);
-                    gcGrid.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    gc.setFill(COLORS[grid[y][x] - 1]);
+                    gc.fillRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                    gc.setStroke(Color.BLACK);
+                    gc.strokeRect(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                 }
             }
         }
 
-        Tetromino current = gameBoard.getCurrentPiece();
+        // falling piece
+        Tetromino current = board.getCurrentPiece();
         if (current != null) {
-            gcGrid.setFill(COLORS[current.getColorIndex() - 1]);
+            gc.setFill(COLORS[current.getColorIndex() - 1]);
             for (int row = 0; row < current.getShape().length; row++) {
                 for (int col = 0; col < current.getShape()[row].length; col++) {
                     if (current.getShape()[row][col] != 0) {
-                        int drawX = (gameBoard.getCurrentX() + col) * TILE_SIZE;
-                        int drawY = (gameBoard.getCurrentY() + row) * TILE_SIZE;
-                        gcGrid.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
-                        gcGrid.setStroke(Color.BLACK);
-                        gcGrid.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        int drawX = (board.getCurrentX() + col) * TILE_SIZE;
+                        int drawY = (board.getCurrentY() + row) * TILE_SIZE;
+                        gc.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        gc.setStroke(Color.BLACK);
+                        gc.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
                     }
                 }
             }
         }
-
-        drawNextPiece();
-
-        if (gameController.isPaused()) {
-            gcGrid.setFill(new Color(0, 0, 0, 0.6));
-            gcGrid.fillRect(0, 0, gridCanvas.getWidth(), gridCanvas.getHeight());
-            gcGrid.setFill(Color.WHITE);
-            gcGrid.setFont(Font.font(48));
-            gcGrid.fillText("PAUSED", gridCanvas.getWidth() / 2 - 80, gridCanvas.getHeight() / 2);
-        }
     }
 
-    private void drawNextPiece() {
-        gcNext.setFill(Color.BLACK);
-        gcNext.fillRect(0, 0, nextCanvas.getWidth(), nextCanvas.getHeight());
+    private void drawNextPiece(GraphicsContext gc, GameBoard board) {
+        gc.setFill(Color.BLACK);
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
-        Tetromino next = gameBoard.getNextPiece();
+        Tetromino next = board.getNextPiece();
         if (next != null) {
-            gcNext.setFill(COLORS[next.getColorIndex() - 1]);
+            gc.setFill(COLORS[next.getColorIndex() - 1]);
             int offsetX = 1;
             int offsetY = 1;
             for (int row = 0; row < next.getShape().length; row++) {
@@ -177,18 +260,37 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
                     if (next.getShape()[row][col] != 0) {
                         int drawX = (col + offsetX) * TILE_SIZE;
                         int drawY = (row + offsetY) * TILE_SIZE;
-                        gcNext.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
-                        gcNext.setStroke(Color.BLACK);
-                        gcNext.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        gc.fillRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
+                        gc.setStroke(Color.BLACK);
+                        gc.strokeRect(drawX, drawY, TILE_SIZE, TILE_SIZE);
                     }
                 }
             }
         }
     }
-    public void onScoreUpdated(ArrayList<ScoreController> newScores) {
-        Platform.runLater(() -> {
-            observableScores.setAll(newScores);
-        });
+
+    private void pauseOverlay(GraphicsContext gc) {
+        gc.setFill(new Color(0, 0, 0, 0.6));
+        gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+        gc.setFill(Color.WHITE);
+        gc.setFont(Font.font(36));
+        gc.fillText("PAUSED", gc.getCanvas().getWidth() / 2 - 60, gc.getCanvas().getHeight() / 2);
     }
 
+    // ScoreUpdateListener for P1 (original interface updates one list at a time)
+    @Override
+    public void onScoreUpdated(ArrayList<ScoreController> newScores) {
+        onScoreUpdatedP1(newScores);
+    }
+
+    private void onScoreUpdatedP1(ArrayList<ScoreController> newScores) {
+        if (observableScoresP1 == null) return;
+        Platform.runLater(() -> observableScoresP1.setAll(newScores));
+    }
+
+    // Helper for P2
+    private void onScoreUpdatedP2(ArrayList<ScoreController> newScores) {
+        if (observableScoresP2 == null) return;
+        Platform.runLater(() -> observableScoresP2.setAll(newScores));
+    }
 }

@@ -6,5 +6,6 @@ public record GameSettings(
         boolean musicEnabled,
         boolean soundEffectsEnabled,
         boolean aiPlayEnabled,
-        boolean extendedModeEnabled
+        boolean extendedModeEnabled,
+        boolean twoPlayerEnabled
 ) {}
