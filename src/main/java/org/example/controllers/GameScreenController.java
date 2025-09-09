@@ -151,6 +151,10 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
             allScores.addAll(newScores);
             allScores.sort((s1, s2) -> Integer.compare(s2.getScore(), s1.getScore()));
             HighScoreManager.saveScores(allScores);
+
+            // Stop music when exiting game
+            org.example.audio.AudioManager.stopMusic();
+
             mainApp.run();
         });
 
