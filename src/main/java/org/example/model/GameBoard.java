@@ -173,7 +173,7 @@ public class GameBoard implements IGameBoard {
                 }
             }
             if (full) {
-                //org.example.audio.AudioManager.playSfx("/audio/sscore.wav");
+                org.example.audio.AudioManager.playSfx("/audio/score.wav");
                 iterationScore++;
                 System.out.println("Iteration Score:" + iterationScore);
                 removeRow(y);
