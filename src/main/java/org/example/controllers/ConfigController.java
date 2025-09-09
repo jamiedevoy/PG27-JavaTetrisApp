@@ -87,7 +87,14 @@ public class ConfigController extends BaseController {
     }
 
     private void setToDefault() {
-        GameSettings defaults = new GameSettings(10, 1, true, true, false, false, false);
+        GameSettings defaults = new GameSettings(
+                10,
+                1,
+                false,
+                false,
+                false,
+                false,
+                false);
 
         fieldSizeSlider.setValue(defaults.fieldSize());
         levelSlider.setValue(defaults.level());
