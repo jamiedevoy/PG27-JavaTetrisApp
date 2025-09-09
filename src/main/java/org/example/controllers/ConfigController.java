@@ -14,6 +14,7 @@ public class ConfigController extends BaseController {
     @FXML private CheckBox soundEffectsCheckBox;
     @FXML private CheckBox aiPlayCheckBox;
     @FXML private CheckBox extendedModeCheckBox;
+    @FXML private CheckBox twoPlayerCheckBox;
     @FXML private Button backButton;
     @FXML private Button resetButton;
 
@@ -31,7 +32,11 @@ public class ConfigController extends BaseController {
                 levelValue.setText(Integer.toString(newVal.intValue()))
         );
 
-        backButton.setOnAction(e -> mainApp.run());
+        backButton.setOnAction(e -> {
+            org.example.model.SettingsStore.set(getSettings());
+            mainApp.run();
+        });
+        
         resetButton.setOnAction(e -> setToDefault());
     }
 
@@ -48,7 +53,8 @@ public class ConfigController extends BaseController {
                 isMusicEnabled(),
                 isSoundEffectsEnabled(),
                 isAIPlayEnabled(),
-                isExtendedModeEnabled()
+                isExtendedModeEnabled(),
+                isTwoPlayerEnabled()
         );
     }
 
@@ -76,8 +82,12 @@ public class ConfigController extends BaseController {
         return extendedModeCheckBox.isSelected();
     }
 
+    public boolean isTwoPlayerEnabled() {
+        return twoPlayerCheckBox.isSelected();
+    }
+
     private void setToDefault() {
-        GameSettings defaults = new GameSettings(10, 1, true, true, false, false);
+        GameSettings defaults = new GameSettings(10, 1, true, true, false, false, false);
 
         fieldSizeSlider.setValue(defaults.fieldSize());
         levelSlider.setValue(defaults.level());
@@ -85,5 +95,6 @@ public class ConfigController extends BaseController {
         soundEffectsCheckBox.setSelected(defaults.soundEffectsEnabled());
         aiPlayCheckBox.setSelected(defaults.aiPlayEnabled());
         extendedModeCheckBox.setSelected(defaults.extendedModeEnabled());
+        twoPlayerCheckBox.setSelected(defaults.twoPlayerEnabled());
     }
 }

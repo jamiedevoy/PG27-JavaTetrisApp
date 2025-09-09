@@ -26,7 +26,6 @@ public class MainController extends BaseController {
 
     public void initialize() {
         playButton.setOnAction(e -> {
-
             TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Player Name Required");
             dialog.setHeaderText("Please enter your name to start the game.");
@@ -34,15 +33,17 @@ public class MainController extends BaseController {
             dialog.setGraphic(null);
 
             dialog.showAndWait().ifPresent(playerName -> {
-
                 if (!playerName.trim().isEmpty()) {
-
                     System.out.println("Player name entered: " + playerName);
 
-                    GameScreen.show(primaryStage, mainApp::showMainMenu, playerName);
+                    // 👉 Read settings saved from Config (including Two Player)
+                    org.example.model.GameSettings gs = org.example.model.SettingsStore.get();
+                    boolean twoPlayer = gs.twoPlayerEnabled();
+
+                    // 👉 Call the two-player-aware overload
+                    GameScreen.show(primaryStage, mainApp::showMainMenu, playerName, twoPlayer);
 
                 } else {
-
                     System.out.println("No player name was entered.");
 
                     Alert errorAlert = new Alert(Alert.AlertType.ERROR);

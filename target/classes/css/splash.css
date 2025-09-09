@@ -1,0 +1,11 @@
+#label {
+    -fx-text-fill: white;
+    -fx-font-size: 27px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-wrap-text: true;
+}
+
+#root {
+    -fx-background-color: black;
+}

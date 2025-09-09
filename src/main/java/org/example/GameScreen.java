@@ -8,26 +8,30 @@ import org.example.controllers.GameScreenController;
 
 public class GameScreen {
 
+    // Keep your old signature for backwards compatibility
     public static void show(Stage primaryStage, Runnable mainApp, String playerName) {
+        show(primaryStage, mainApp, playerName, false); // default single-player
+    }
+
+    // NEW overload: supports two-player flag
+    public static void show(Stage primaryStage, Runnable mainApp, String playerName, boolean twoPlayer) {
         try {
             FXMLLoader loader = new FXMLLoader(GameScreen.class.getResource("/fxml/Game.fxml"));
             Parent root = loader.load();
 
             GameScreenController controller = loader.getController();
-            // Pass the player's name to the controller's start method
-            controller.start(primaryStage, mainApp, playerName);
+            controller.start(primaryStage, mainApp, playerName, twoPlayer);
 
             Scene scene = new Scene(root);
-            primaryStage.setTitle("Tetris - Game");
+            primaryStage.setTitle(twoPlayer ? "Tetris - Two Player" : "Tetris");
             primaryStage.setScene(scene);
             primaryStage.show();
-
-            root.requestFocus(); // Ensure key events are captured
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 }
+
 
 // Moved to
     /*private static final int TILE_SIZE = 30;
