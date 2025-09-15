@@ -17,7 +17,7 @@ public class AudioManager {
         sfxEnabled = sfxOn;
     }
 
-    // Play looping background music
+    // Play looping background music t
     public static void playMusic(String resourcePath) {
         if (!musicEnabled) return;
 
