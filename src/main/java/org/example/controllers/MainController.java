@@ -41,10 +41,12 @@ public class MainController extends BaseController {
                     boolean twoPlayer = gs.twoPlayerEnabled();
 
                     // Configure audio
-                    org.example.audio.AudioManager.configure(gs.musicEnabled(), gs.soundEffectsEnabled());
+                    org.example.audio.AudioManager.getInstance()
+                            .configure(gs.musicEnabled(), gs.soundEffectsEnabled());
 
-                    // Play background music if enabled
-                    org.example.audio.AudioManager.playMusic("/audio/theme.mp3");
+// Play background music if enabled
+                    org.example.audio.AudioManager.getInstance()
+                            .playMusic("/audio/theme.mp3");
 
                     // 👉 Call the two-player-aware overload
                     GameScreen.show(primaryStage, mainApp::showMainMenu, playerName, twoPlayer);

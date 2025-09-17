@@ -25,6 +25,21 @@ public class ConfigController extends BaseController {
         this.primaryStage = stage;
         this.mainApp = mainApp;
 
+        // Set initial UI values from saved settings
+        GameSettings current = org.example.model.SettingsStore.get();
+
+        fieldSizeSlider.setValue(current.fieldSize());
+        levelSlider.setValue(current.level());
+        musicCheckBox.setSelected(current.musicEnabled());
+        soundEffectsCheckBox.setSelected(current.soundEffectsEnabled());
+        aiPlayCheckBox.setSelected(current.aiPlayEnabled());
+        extendedModeCheckBox.setSelected(current.extendedModeEnabled());
+        twoPlayerCheckBox.setSelected(current.twoPlayerEnabled());
+
+        // Keep labels in sync with sliders
+        fieldSizeValue.setText(Integer.toString((int) fieldSizeSlider.getValue()));
+        levelValue.setText(Integer.toString((int) levelSlider.getValue()));
+
         fieldSizeSlider.valueProperty().addListener((o, oldVal, newVal) ->
                 fieldSizeValue.setText(Integer.toString(newVal.intValue()))
         );
@@ -36,9 +51,10 @@ public class ConfigController extends BaseController {
             org.example.model.SettingsStore.set(getSettings());
             mainApp.run();
         });
-        
+
         resetButton.setOnAction(e -> setToDefault());
     }
+
 
     public void setMainApp(Runnable mainApp, Stage primaryStage) {
         this.mainApp = mainApp;
