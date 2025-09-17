@@ -211,6 +211,18 @@ public class GameBoard implements IGameBoard {
             }
         }
     }
+
+    // This is a helper for our external player mode
+    public PureGame toPureGame() {
+        return new PureGame(
+                GRID_WIDTH,
+                GRID_HEIGHT,
+                grid,
+                currentPiece != null ? currentPiece.getShape() : new int[0][0],
+                nextPiece != null ? nextPiece.getShape() : new int[0][0]
+        );
+    }
+
     public int getCurrentScore() {
         return iterationScore;
     }
