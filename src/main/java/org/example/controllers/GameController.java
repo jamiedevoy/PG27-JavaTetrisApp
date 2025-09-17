@@ -1,6 +1,7 @@
 package org.example.controllers;
 
 import javafx.scene.input.KeyCode;
+import org.example.AI.TetrisAI;
 import org.example.external.TetrisClient;
 import org.example.interfaces.IGameBoard;
 import org.example.model.GameBoard;
@@ -18,6 +19,9 @@ public class GameController extends BaseController {
 
     private final IGameBoard board;
     private final boolean isPlayerTwo; // decides the key mapping
+
+    //private boolean useLocalAIPlayerOne = SettingsStore.getInstance().get().aiPlayEnabled();
+    private boolean useLocalAIPlayerTwo = SettingsStore.getInstance().get().aiPlayEnabled();
 
     // P1 by default
     public GameController(IGameBoard board) {
@@ -89,6 +93,24 @@ public class GameController extends BaseController {
                         alert.showAndWait();
                     });
                     return;
+                }
+
+            }
+
+            if (!isPlayerTwo && useLocalAIPlayerTwo) {
+                GameBoard gameBoard = (GameBoard) board;
+                TetrisAI ai = new TetrisAI();
+                OpMove bestMove = ai.findBestMove(gameBoard, gameBoard.getCurrentPiece());
+
+                // Apply rotations
+                for (int i = 0; i < bestMove.getRotation(); i++) {
+                    board.rotatePiece();
+                }
+
+                // Move horizontally
+                int dx = bestMove.getColumn() - board.getCurrentX();
+                for (int i = 0; i < Math.abs(dx); i++) {
+                    board.move(dx < 0 ? -1 : 1, 0);
                 }
             }
 

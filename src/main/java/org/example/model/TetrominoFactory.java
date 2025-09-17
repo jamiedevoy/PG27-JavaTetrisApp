@@ -19,4 +19,9 @@ public final class TetrominoFactory {
         TetrominoType type = TetrominoType.values()[random.nextInt(TetrominoType.values().length)];
         return Tetromino.fromType(type);
     }
+
+    public static Tetromino copyOf(Tetromino original) {
+        return new Tetromino(original.getShape(), original.getColorIndex());
+    }
+
 }
