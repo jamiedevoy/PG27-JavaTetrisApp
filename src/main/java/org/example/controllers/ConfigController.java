@@ -26,7 +26,7 @@ public class ConfigController extends BaseController {
         this.mainApp = mainApp;
 
         // Set initial UI values from saved settings
-        GameSettings current = org.example.model.SettingsStore.get();
+        GameSettings current = org.example.model.SettingsStore.getInstance().get();
 
         fieldSizeSlider.setValue(current.fieldSize());
         levelSlider.setValue(current.level());
@@ -48,7 +48,7 @@ public class ConfigController extends BaseController {
         );
 
         backButton.setOnAction(e -> {
-            org.example.model.SettingsStore.set(getSettings());
+            org.example.model.SettingsStore.getInstance().set(getSettings());
             mainApp.run();
         });
 

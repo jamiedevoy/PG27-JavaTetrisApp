@@ -36,19 +36,19 @@ public class MainController extends BaseController {
                 if (!playerName.trim().isEmpty()) {
                     System.out.println("Player name entered: " + playerName);
 
-                    // 👉 Read settings saved from Config (including Two Player)
-                    org.example.model.GameSettings gs = org.example.model.SettingsStore.get();
+                    // Settings saved from Config (including Two Player)
+                    org.example.model.GameSettings gs = org.example.model.SettingsStore.getInstance().get();
                     boolean twoPlayer = gs.twoPlayerEnabled();
 
                     // Configure audio
                     org.example.audio.AudioManager.getInstance()
                             .configure(gs.musicEnabled(), gs.soundEffectsEnabled());
 
-// Play background music if enabled
+                    // Play background music if enabled
                     org.example.audio.AudioManager.getInstance()
                             .playMusic("/audio/theme.mp3");
 
-                    // 👉 Call the two-player-aware overload
+                    // Call the two-player-aware overload
                     GameScreen.show(primaryStage, mainApp::showMainMenu, playerName, twoPlayer);
 
                 } else {
