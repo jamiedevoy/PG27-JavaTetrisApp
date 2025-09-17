@@ -43,7 +43,6 @@ public class GameController extends BaseController {
                 default -> { }
             }
         } else {
-            // Player 2 controls: IJKL  (I=rotate, J=left, K=down, L=right)
             switch (code) {
                 case J -> board.move(-1, 0);
                 case L -> board.move(1, 0);
@@ -85,7 +84,7 @@ public class GameController extends BaseController {
                                 new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
                         alert.setTitle("External Player Error");
                         alert.setHeaderText("TetrisServer not running");
-                        alert.setContentText("Extended mode requires TetrisServer to be running on port 3000.\n\n" +
+                        alert.setContentText("Extended mode requires TetrisServer to be running on port 3000.\n" +
                                 "Please start TetrisServer.jar and try again.");
                         alert.showAndWait();
                     });
