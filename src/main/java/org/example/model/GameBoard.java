@@ -127,10 +127,11 @@ public class GameBoard implements IGameBoard {
         }
     }
 
+    // Uses factory
     private Tetromino randomTetromino() {
-        TetrominoType type = TetrominoType.values()[random.nextInt(TetrominoType.values().length)];
-        return Tetromino.fromType(type);
+        return TetrominoFactory.createRandom();
     }
+
 
     private boolean canPlace(int x, int y, int[][] shape) {
         for (int row = 0; row < shape.length; row++) {

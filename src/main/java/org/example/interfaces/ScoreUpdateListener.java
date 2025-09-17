@@ -4,6 +4,7 @@ import org.example.controllers.ScoreController;
 
 import java.util.ArrayList;
 
-public interface ScoreUpdateListener {
-    void onScoreUpdated(ArrayList<ScoreController> newScores);
+public interface ScoreUpdateListener<T> {
+    void onScoreUpdated(ArrayList<T> newScores);
 }
+

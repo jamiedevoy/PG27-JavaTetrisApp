@@ -22,9 +22,11 @@ import org.example.model.GameBoard;
 import org.example.model.Tetromino;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Stream;
 
-public class GameScreenController extends BaseController implements ScoreUpdateListener {
+public class GameScreenController extends BaseController implements ScoreUpdateListener<ScoreController> {
 
     @FXML private BorderPane gameLayout;
 
@@ -141,23 +143,26 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
             gameBoard2.addScoreUpdateListener(newScores -> onScoreUpdatedP2(newScores));
         }
 
-        // Back: merge & save scores, return to menu
-        // Back: merge & save scores, return to menu
+        // Using Java Streams to merge player 1 scores, optional player 2 scores, and saved scores.
+        // We then flatten them into one stream, and use Comparator.comparingInt(...).reversed()
+        // to sort scores in descending order before collecting back into a list.
         backButton.setOnAction(e -> {
-            List<ScoreController> newScores = new ArrayList<>(gameBoard1.getScores());
-            if (twoPlayerMode && gameBoard2 != null) {
-                newScores.addAll(gameBoard2.getScores());
-            }
-            List<ScoreController> allScores = HighScoreManager.loadScores();
-            allScores.addAll(newScores);
-            allScores.sort((s1, s2) -> Integer.compare(s2.getScore(), s1.getScore()));
+            List<ScoreController> allScores =
+                    java.util.stream.Stream.<List<ScoreController>>of(
+                                    gameBoard1.getScores(),
+                                    (twoPlayerMode && gameBoard2 != null) ? gameBoard2.getScores() : java.util.List.<ScoreController>of(),
+                                    HighScoreManager.loadScores()
+                            )
+                            .flatMap(java.util.List::stream)
+                            .sorted(java.util.Comparator.comparingInt(ScoreController::getScore).reversed())
+                            .toList();
+
             HighScoreManager.saveScores(allScores);
 
-            // Stop music when exiting game
             org.example.audio.AudioManager.getInstance().stopMusic();
-
             mainApp.run();
         });
+
 
 
         // Focus & keys
