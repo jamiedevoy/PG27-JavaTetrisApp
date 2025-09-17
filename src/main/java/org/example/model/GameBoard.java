@@ -77,9 +77,12 @@ public class GameBoard implements IGameBoard {
         return currentY;
     }
 
-    public boolean move(int dx, int dy) {
-        //System.out.println(canPlace(currentX + dx, currentY + dy, currentPiece.getShape()));// debug
+    private boolean move(int dx, int dy, boolean playSound) {
         if (canPlace(currentX + dx, currentY + dy, currentPiece.getShape())) {
+            if (playSound) {
+                org.example.audio.AudioManager.getInstance()
+                        .playSfx("/audio/move.wav");
+            }
             currentX += dx;
             currentY += dy;
             return true;
@@ -87,8 +90,16 @@ public class GameBoard implements IGameBoard {
         return false;
     }
 
+    // Public method for user moves (default → play sound)
+    @Override
+    public boolean move(int dx, int dy) {
+        return move(dx, dy, true);
+    }
+
     public void rotatePiece() {
         int[][] original = currentPiece.getShape();
+        org.example.audio.AudioManager.getInstance()
+                .playSfx("/audio/move.wav");
         currentPiece.rotate();
         if (!canPlace(currentX, currentY, currentPiece.getShape())) {
             // Revert if invalid
@@ -97,7 +108,7 @@ public class GameBoard implements IGameBoard {
     }
 
     public void tick() {
-        if (!move(0, 1)) {
+        if (!move(0, 1, false)) {
             lockPiece();
             clearFullRows();
             spawnNewPiece();
@@ -164,6 +175,8 @@ public class GameBoard implements IGameBoard {
                 }
             }
             if (full) {
+                org.example.audio.AudioManager.getInstance()
+                        .playSfx("/audio/score.wav");
                 iterationScore++;
                 System.out.println("Iteration Score:" + iterationScore);
                 removeRow(y);

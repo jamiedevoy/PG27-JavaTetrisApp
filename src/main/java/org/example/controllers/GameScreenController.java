@@ -142,6 +142,7 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
         }
 
         // Back: merge & save scores, return to menu
+        // Back: merge & save scores, return to menu
         backButton.setOnAction(e -> {
             List<ScoreController> newScores = new ArrayList<>(gameBoard1.getScores());
             if (twoPlayerMode && gameBoard2 != null) {
@@ -151,8 +152,13 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
             allScores.addAll(newScores);
             allScores.sort((s1, s2) -> Integer.compare(s2.getScore(), s1.getScore()));
             HighScoreManager.saveScores(allScores);
+
+            // Stop music when exiting game
+            org.example.audio.AudioManager.getInstance().stopMusic();
+
             mainApp.run();
         });
+
 
         // Focus & keys
         Platform.runLater(() -> gridCanvasP1.requestFocus());
