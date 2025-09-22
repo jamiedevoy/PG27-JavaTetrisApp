@@ -1,0 +1,9 @@
+{
+  "fieldSize" : 10,
+  "level" : 1,
+  "musicEnabled" : false,
+  "soundEffectsEnabled" : false,
+  "aiPlayEnabled" : false,
+  "extendedModeEnabled" : false,
+  "twoPlayerEnabled" : false
+}
