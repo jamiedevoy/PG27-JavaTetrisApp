@@ -1,4 +1,5 @@
 package org.example.model;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,15 +11,23 @@ import org.example.interfaces.ScoreUpdateListener;
 
 public class GameBoard implements IGameBoard {
 
+    // ==== defaults (kept to preserve your original behavior) ====
+    public static final int DEFAULT_GRID_WIDTH  = 10;
+    public static final int DEFAULT_GRID_HEIGHT = 20;
 
-    public static final int GRID_WIDTH = 10;
-    public static final int GRID_HEIGHT = 20;
-    private static final int START_X = 3;
+    // ==== dynamic dimensions (replace old static usage) ====
+    private int gridWidth;
+    private int gridHeight;
+
     public int iterationInt = 1;
     public int iterationScore = 0;
+
     ArrayList<ScoreController> scores = new ArrayList<>();
     private String playerName;
-    private final int[][] grid = new int[GRID_HEIGHT][GRID_WIDTH];
+
+    // grid is now sized from gridWidth x gridHeight
+    private int[][] grid;
+
     private final Random random = new Random();
 
     private Tetromino currentPiece;
@@ -26,35 +35,50 @@ public class GameBoard implements IGameBoard {
     private int currentX;
     private int currentY;
 
+    // listeners
+    private final List<ScoreUpdateListener> scoreUpdateListeners = new ArrayList<>();
 
-    // The list of listeners is still here
-    private List<ScoreUpdateListener> scoreUpdateListeners = new ArrayList<>();
+    // ====== constructors ======
 
-    // Method to add a listener
+    /** Original constructor: keeps your default 10x20 board. */
+    public GameBoard(String playerName) {
+        this(playerName, DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT);
+    }
+
+    /** NEW: explicit (cols x rows) so field size (blocks across) can vary. */
+    public GameBoard(String playerName, int cols, int rows) {
+        this.playerName = playerName;
+        if (cols < 1 || rows < 1) {
+            throw new IllegalArgumentException("cols/rows must be > 0");
+        }
+        this.gridWidth = cols;
+        this.gridHeight = rows;
+        this.grid = new int[gridHeight][gridWidth];
+        spawnNewPiece(); // will also prepare nextPiece
+    }
+
+    // ====== listener plumbing ======
+
     public void addScoreUpdateListener(ScoreUpdateListener listener) {
         scoreUpdateListeners.add(listener);
     }
 
-    // Method to notify all listeners
     private void notifyScoreListeners() {
         for (ScoreUpdateListener listener : scoreUpdateListeners) {
             listener.onScoreUpdated(this.scores);
         }
     }
-    public GameBoard(String playerName) {
-        this.playerName = playerName;
-        spawnNewPiece();
-        //nextPiece = randomTetromino();
-    }
+
+    // ====== IGameBoard & getters ======
 
     @Override
     public int getGridWidth() {
-        return GRID_WIDTH;
+        return gridWidth;
     }
 
     @Override
     public int getGridHeight() {
-        return GRID_HEIGHT;
+        return gridHeight;
     }
 
     public int[][] getGrid() {
@@ -77,11 +101,13 @@ public class GameBoard implements IGameBoard {
         return currentY;
     }
 
+    // ====== movement / rotation / tick ======
+
     private boolean move(int dx, int dy, boolean playSound) {
+        if (currentPiece == null) return false;
         if (canPlace(currentX + dx, currentY + dy, currentPiece.getShape())) {
             if (playSound) {
-                org.example.audio.AudioManager.getInstance()
-                        .playSfx("/audio/move.wav");
+                org.example.audio.AudioManager.getInstance().playSfx("/audio/move.wav");
             }
             currentX += dx;
             currentY += dy;
@@ -90,19 +116,18 @@ public class GameBoard implements IGameBoard {
         return false;
     }
 
-    // Public method for user moves (default → play sound)
     @Override
     public boolean move(int dx, int dy) {
         return move(dx, dy, true);
     }
 
     public void rotatePiece() {
+        if (currentPiece == null) return;
         int[][] original = currentPiece.getShape();
-        org.example.audio.AudioManager.getInstance()
-                .playSfx("/audio/move.wav");
+        org.example.audio.AudioManager.getInstance().playSfx("/audio/move.wav");
         currentPiece.rotate();
         if (!canPlace(currentX, currentY, currentPiece.getShape())) {
-            // Revert if invalid
+            // revert if invalid
             currentPiece = new Tetromino(original, currentPiece.getColorIndex());
         }
     }
@@ -115,23 +140,25 @@ public class GameBoard implements IGameBoard {
         }
     }
 
+    // ====== spawning / pieces ======
+
     private void spawnNewPiece() {
-        currentPiece = nextPiece == null ? randomTetromino() : nextPiece;
-        currentX = START_X;
+        currentPiece = (nextPiece == null) ? randomTetromino() : nextPiece;
+        // center spawn horizontally based on current width
+        currentX = Math.max(0, (gridWidth / 2) - 2); // -2 is a typical offset for 4-wide tetrominoes
         currentY = 0;
         nextPiece = randomTetromino();
 
         if (!canPlace(currentX, currentY, currentPiece.getShape())) {
             clearBoard();
-
         }
     }
 
-    // Uses factory
     private Tetromino randomTetromino() {
         return TetrominoFactory.createRandom();
     }
 
+    // ====== collision & locking ======
 
     private boolean canPlace(int x, int y, int[][] shape) {
         for (int row = 0; row < shape.length; row++) {
@@ -139,7 +166,7 @@ public class GameBoard implements IGameBoard {
                 if (shape[row][col] != 0) {
                     int gridX = x + col;
                     int gridY = y + row;
-                    if (gridX < 0 || gridX >= GRID_WIDTH || gridY < 0 || gridY >= GRID_HEIGHT) {
+                    if (gridX < 0 || gridX >= gridWidth || gridY < 0 || gridY >= gridHeight) {
                         return false;
                     }
                     if (grid[gridY][gridX] != 0) {
@@ -152,13 +179,14 @@ public class GameBoard implements IGameBoard {
     }
 
     private void lockPiece() {
+        if (currentPiece == null) return;
         int[][] shape = currentPiece.getShape();
         for (int row = 0; row < shape.length; row++) {
             for (int col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] != 0) {
                     int gridX = currentX + col;
                     int gridY = currentY + row;
-                    if (gridY >= 0 && gridY < GRID_HEIGHT && gridX >= 0 && gridX < GRID_WIDTH) {
+                    if (gridY >= 0 && gridY < gridHeight && gridX >= 0 && gridX < gridWidth) {
                         grid[gridY][gridX] = currentPiece.getColorIndex();
                     }
                 }
@@ -166,31 +194,32 @@ public class GameBoard implements IGameBoard {
         }
     }
 
+    // ====== row clearing / board reset ======
+
     private void clearFullRows() {
-        for (int y = GRID_HEIGHT - 1; y >= 0; y--) {
+        for (int y = gridHeight - 1; y >= 0; y--) {
             boolean full = true;
-            for (int x = 0; x < GRID_WIDTH; x++) {
+            for (int x = 0; x < gridWidth; x++) {
                 if (grid[y][x] == 0) {
                     full = false;
                     break;
                 }
             }
             if (full) {
-                org.example.audio.AudioManager.getInstance()
-                        .playSfx("/audio/score.wav");
+                org.example.audio.AudioManager.getInstance().playSfx("/audio/score.wav");
                 iterationScore++;
                 System.out.println("Iteration Score:" + iterationScore);
                 removeRow(y);
-                y++;
+                y++; // re-check the same row index after shifting
             }
         }
     }
 
     private void removeRow(int row) {
         for (int y = row; y > 0; y--) {
-            System.arraycopy(grid[y - 1], 0, grid[y], 0, GRID_WIDTH);
+            System.arraycopy(grid[y - 1], 0, grid[y], 0, gridWidth);
         }
-        for (int x = 0; x < GRID_WIDTH; x++) {
+        for (int x = 0; x < gridWidth; x++) {
             grid[0][x] = 0;
         }
     }
@@ -199,24 +228,35 @@ public class GameBoard implements IGameBoard {
         scores.add(new ScoreController(playerName, iterationInt, iterationScore));
         iterationInt++;
         System.out.println("Attempt Iteration:" + iterationInt);
-        // We reset our score based on clearing board
         iterationScore = 0;
         notifyScoreListeners();
         System.out.println("Attempt Count:" + iterationScore);
 
-        for (int y = 0; y < GRID_HEIGHT; y++) {
-            for (int x = 0; x < GRID_WIDTH; x++) {
+        for (int y = 0; y < gridHeight; y++) {
+            for (int x = 0; x < gridWidth; x++) {
                 grid[y][x] = 0;
-
             }
         }
     }
 
-    // This is a helper for our external player mode
+    // ====== helpers ======
+
+    /** Optional: programmatic resize if you ever need it at runtime (not required for your current flow). */
+    public void resizeGrid(int cols, int rows) {
+        if (cols < 1 || rows < 1) throw new IllegalArgumentException("cols/rows must be > 0");
+        this.gridWidth = cols;
+        this.gridHeight = rows;
+        this.grid = new int[gridHeight][gridWidth];
+        this.currentX = Math.max(0, (gridWidth / 2) - 2);
+        this.currentY = 0;
+        this.currentPiece = null;
+        this.nextPiece = randomTetromino();
+    }
+
     public PureGame toPureGame() {
         return new PureGame(
-                GRID_WIDTH,
-                GRID_HEIGHT,
+                gridWidth,
+                gridHeight,
                 grid,
                 currentPiece != null ? currentPiece.getShape() : new int[0][0],
                 nextPiece != null ? nextPiece.getShape() : new int[0][0]
