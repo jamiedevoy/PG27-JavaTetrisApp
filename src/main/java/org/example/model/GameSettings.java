@@ -5,7 +5,8 @@ public record GameSettings(
         int level,
         boolean musicEnabled,
         boolean soundEffectsEnabled,
-        boolean aiPlayEnabled,
+        boolean aiPlayer1Enabled,
+        boolean aiPlayer2Enabled,
         boolean extendedModeEnabled,
         boolean twoPlayerEnabled
 ) {}

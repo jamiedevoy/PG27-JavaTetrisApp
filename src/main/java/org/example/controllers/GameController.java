@@ -1,6 +1,8 @@
 package org.example.controllers;
 
 import javafx.scene.input.KeyCode;
+import org.example.AI.AIMove;
+import org.example.AI.TetrisAI;
 import org.example.external.TetrisClient;
 import org.example.interfaces.IGameBoard;
 import org.example.model.GameBoard;
@@ -18,6 +20,11 @@ public class GameController extends BaseController {
 
     private final IGameBoard board;
     private final boolean isPlayerTwo; // decides the key mapping
+
+    private final boolean isPlayerOneAI = SettingsStore.getInstance().get().aiPlayer1Enabled();
+    private final boolean isPlayerTwoAI = SettingsStore.getInstance().get().aiPlayer2Enabled();
+    private final boolean isExternalPlayer = SettingsStore.getInstance().get().extendedModeEnabled();
+
 
     // P1 by default
     public GameController(IGameBoard board) {
@@ -57,7 +64,16 @@ public class GameController extends BaseController {
         if (paused) return;
 
         if (lastFallTime == 0 || now - lastFallTime > FALL_INTERVAL_NS) {
-            if (!isPlayerTwo && SettingsStore.getInstance().get().extendedModeEnabled()) {
+            GameBoard gameBoard = (GameBoard) board;
+
+            if (gameBoard.getCurrentPiece() == null) {
+                board.tick();
+                lastFallTime = now;
+                return;
+            }
+
+            // External Player
+            if (!isPlayerTwo && isExternalPlayer) {
                 try {
                     // External player makes the move when extended mode is enabled
                     PureGame pg = ((GameBoard) board).toPureGame();
@@ -90,14 +106,26 @@ public class GameController extends BaseController {
                     });
                     return;
                 }
+
             }
 
-            board.tick();
-            lastFallTime = now;
+            // Player 1 is an AI
+            if (!isPlayerTwo && isPlayerOneAI && !isExternalPlayer) {
+                applyLocalAIMove(gameBoard);
+            }
+
+            // Player Two is an AI
+            if (isPlayerTwo && isPlayerTwoAI) {
+                applyLocalAIMove(gameBoard);
+            }
+
+            if (gameBoard.getCurrentPiece() != null) {
+                board.tick();
+                lastFallTime = now;
+                return;
+            }
         }
     }
-
-
 
     public boolean isPaused() {
         return paused;
@@ -106,4 +134,20 @@ public class GameController extends BaseController {
     public void setPaused(boolean paused) {
         this.paused = paused;
     }
+
+    private void applyLocalAIMove(GameBoard gameBoard) {
+        PureGame pg = ((GameBoard) board).toPureGame();
+        TetrisAI ai = new TetrisAI();
+        AIMove bestMove = ai.findBestMove(gameBoard, gameBoard.getCurrentPiece());
+
+        for (int i = 0; i < bestMove.getRotation(); i++) {
+            board.rotatePiece();
+        }
+
+        int dx = bestMove.getColumn() - board.getCurrentX();
+        for (int i = 0; i < Math.abs(dx); i++) {
+            board.move(dx < 0 ? -1 : 1, 0);
+        }
+    }
+
 }

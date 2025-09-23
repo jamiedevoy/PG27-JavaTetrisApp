@@ -24,35 +24,8 @@ public final class SettingsStore {
     }
 
     public void set(GameSettings s) {
-        if (s == null) return;
         this.current = s;
         save(s);
-    }
-
-    public void resetBoardSize() {
-        GameSettings defaults = defaults();
-        this.current = new GameSettings(
-                defaults.fieldSize(),
-                current.level(),
-                current.musicEnabled(),
-                current.soundEffectsEnabled(),
-                current.aiPlayEnabled(),
-                current.extendedModeEnabled(),
-                current.twoPlayerEnabled()
-        );
-        save(this.current);
-    }
-
-    public static GameSettings defaults() {
-        return new GameSettings(
-                10,
-                1,
-                false,
-                false,
-                false,
-                false,
-                false
-        );
     }
 
     private GameSettings load() {
@@ -64,13 +37,13 @@ public final class SettingsStore {
                 e.printStackTrace();
             }
         }
-        return defaults();
+        // fallback defaults
+        return new GameSettings(10, 1, false, false, false, false, false);
     }
 
     private void save(GameSettings settings) {
         try {
-            mapper.writerWithDefaultPrettyPrinter()
-                  .writeValue(new File(SETTINGS_FILE), settings);
+            mapper.writerWithDefaultPrettyPrinter().writeValue(new File(SETTINGS_FILE), settings);
         } catch (IOException e) {
             e.printStackTrace();
         }
