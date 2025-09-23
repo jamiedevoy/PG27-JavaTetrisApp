@@ -12,7 +12,8 @@ public class ConfigController extends BaseController {
     @FXML private Label levelValue;
     @FXML private CheckBox musicCheckBox;
     @FXML private CheckBox soundEffectsCheckBox;
-    @FXML private CheckBox aiPlayCheckBox;
+    @FXML private CheckBox aiP1CheckBox;
+    @FXML private CheckBox aiP2CheckBox;
     @FXML private CheckBox extendedModeCheckBox;
     @FXML private CheckBox twoPlayerCheckBox;
     @FXML private Button backButton;
@@ -32,7 +33,8 @@ public class ConfigController extends BaseController {
         levelSlider.setValue(current.level());
         musicCheckBox.setSelected(current.musicEnabled());
         soundEffectsCheckBox.setSelected(current.soundEffectsEnabled());
-        aiPlayCheckBox.setSelected(current.aiPlayEnabled());
+        aiP1CheckBox.setSelected(current.aiPlayer1Enabled());
+        aiP2CheckBox.setSelected(current.aiPlayer2Enabled());
         extendedModeCheckBox.setSelected(current.extendedModeEnabled());
         twoPlayerCheckBox.setSelected(current.twoPlayerEnabled());
 
@@ -55,12 +57,6 @@ public class ConfigController extends BaseController {
         resetButton.setOnAction(e -> setToDefault());
     }
 
-
-    public void setMainApp(Runnable mainApp, Stage primaryStage) {
-        this.mainApp = mainApp;
-        this.primaryStage = primaryStage;
-    }
-
     // Wrap all getter methods
     public GameSettings getSettings() {
         return new GameSettings(
@@ -68,7 +64,8 @@ public class ConfigController extends BaseController {
                 getLevel(),
                 isMusicEnabled(),
                 isSoundEffectsEnabled(),
-                isAIPlayEnabled(),
+                isAIPlayer1Enabled(),
+                isAIPlayer2Enabled(),
                 isExtendedModeEnabled(),
                 isTwoPlayerEnabled()
         );
@@ -90,8 +87,12 @@ public class ConfigController extends BaseController {
         return soundEffectsCheckBox.isSelected();
     }
 
-    public boolean isAIPlayEnabled() {
-        return aiPlayCheckBox.isSelected();
+    public boolean isAIPlayer1Enabled() {
+        return aiP1CheckBox.isSelected();
+    }
+
+    public boolean isAIPlayer2Enabled() {
+        return aiP2CheckBox.isSelected();
     }
 
     public boolean isExtendedModeEnabled() {
@@ -110,13 +111,15 @@ public class ConfigController extends BaseController {
                 false,
                 false,
                 false,
+                false,
                 false);
 
         fieldSizeSlider.setValue(defaults.fieldSize());
         levelSlider.setValue(defaults.level());
         musicCheckBox.setSelected(defaults.musicEnabled());
         soundEffectsCheckBox.setSelected(defaults.soundEffectsEnabled());
-        aiPlayCheckBox.setSelected(defaults.aiPlayEnabled());
+        aiP1CheckBox.setSelected(defaults.aiPlayer1Enabled());
+        aiP2CheckBox.setSelected(defaults.aiPlayer2Enabled());
         extendedModeCheckBox.setSelected(defaults.extendedModeEnabled());
         twoPlayerCheckBox.setSelected(defaults.twoPlayerEnabled());
     }

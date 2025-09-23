@@ -13,10 +13,6 @@ import java.util.Objects;
 
 public class SplashController extends BaseController {
     @FXML private ImageView SplashImage;
-    @FXML private Label SplashLabel;
-
-    private Stage stage;
-    private Main mainApp;
 
     public void initialize() {
         // Load splash screen image
@@ -32,13 +28,11 @@ public class SplashController extends BaseController {
     }
 
     public void startSplash(Stage splashStage, Main mainApp) {
-        this.stage = splashStage;
-        this.mainApp = mainApp;
 
         Task<Void> loadTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                Thread.sleep(5000);
+                Thread.sleep(10); // 3000
                 return null;
             }
 

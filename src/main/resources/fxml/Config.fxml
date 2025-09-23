@@ -51,7 +51,8 @@
                 <Label styleClass="gameLabels" text="Game Settings" />
                 <CheckBox fx:id="musicCheckBox" styleClass="gameLabels" text="Music" />
                 <CheckBox fx:id="soundEffectsCheckBox" styleClass="gameLabels" text="Sound Effects" />
-                <CheckBox fx:id="aiPlayCheckBox" styleClass="gameLabels" text="AI Play" />
+                <CheckBox fx:id="aiP1CheckBox" styleClass="gameLabels" text="AI Player 1" />
+                <CheckBox fx:id="aiP2CheckBox" styleClass="gameLabels" text="AI Player 2"/>
                 <CheckBox fx:id="extendedModeCheckBox" styleClass="gameLabels" text="Extended Mode" />
                 <CheckBox fx:id="twoPlayerCheckBox" styleClass="gameLabels" text="Two Player Mode"/>
             </VBox>
