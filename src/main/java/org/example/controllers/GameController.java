@@ -1,5 +1,6 @@
 package org.example.controllers;
 
+import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import org.example.AI.AIMove;
 import org.example.AI.TetrisAI;
@@ -65,6 +66,12 @@ public class GameController extends BaseController {
 
         if (lastFallTime == 0 || now - lastFallTime > FALL_INTERVAL_NS) {
             GameBoard gameBoard = (GameBoard) board;
+
+            if (gameBoard.isGameOver()) {
+                paused = true;
+                showGameOverScreen();
+                return;
+            }
 
             if (gameBoard.getCurrentPiece() == null) {
                 board.tick();
@@ -150,4 +157,13 @@ public class GameController extends BaseController {
         }
     }
 
+    private void showGameOverScreen() {
+        javafx.application.Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Game Over");
+            alert.setHeaderText("No more valid moves");
+            alert.setContentText("The game has ended. Try again?");
+            alert.showAndWait();
+        });
+    }
 }

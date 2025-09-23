@@ -16,8 +16,8 @@ public class GameBoard implements IGameBoard {
     public static final int DEFAULT_GRID_HEIGHT = 20;
 
     // ==== dynamic dimensions (replace old static usage) ====
-    private int gridWidth;
-    private int gridHeight;
+    private static int gridWidth;
+    private static int gridHeight;
 
     public int iterationInt = 1;
     public int iterationScore = 0;
@@ -34,6 +34,7 @@ public class GameBoard implements IGameBoard {
     private Tetromino nextPiece;
     private int currentX;
     private int currentY;
+    private boolean isGameOver = false;
 
     // listeners
     private final List<ScoreUpdateListener> scoreUpdateListeners = new ArrayList<>();
@@ -81,22 +82,27 @@ public class GameBoard implements IGameBoard {
         return gridHeight;
     }
 
+    @Override
     public int[][] getGrid() {
         return grid;
     }
 
+    @Override
     public Tetromino getCurrentPiece() {
         return currentPiece;
     }
 
+    @Override
     public Tetromino getNextPiece() {
         return nextPiece;
     }
 
+    @Override
     public int getCurrentX() {
         return currentX;
     }
 
+    @Override
     public int getCurrentY() {
         return currentY;
     }
@@ -150,7 +156,7 @@ public class GameBoard implements IGameBoard {
         nextPiece = randomTetromino();
 
         if (!canPlace(currentX, currentY, currentPiece.getShape())) {
-            clearBoard();
+            isGameOver = true;
         }
     }
 
@@ -176,6 +182,10 @@ public class GameBoard implements IGameBoard {
             }
         }
         return true;
+    }
+
+    public boolean isGameOver() {
+        return isGameOver;
     }
 
     private void lockPiece() {

@@ -10,7 +10,7 @@ public class TetrisAI {
 
     public AIMove findBestMove(GameBoard gameBoard, Tetromino piece) {
         if (piece == null || piece.getShape() == null) {
-            return new AIMove(GameBoard.GRID_WIDTH / 2, 0);
+            return new AIMove(gameBoard.getGridWidth() / 2, 0);
         }
 
         AIMove bestMove = null;
@@ -25,7 +25,7 @@ public class TetrisAI {
             }
 
             int pieceWidth = rotatedPiece.getShape()[0].length;
-            int maxCol = GameBoard.GRID_WIDTH - pieceWidth;
+            int maxCol = gameBoard.getGridWidth() - pieceWidth;
 
             for (int col = 0; col <= maxCol; col++) {
                 int[][] simulatedBoard = simulateDrop(gameBoard.getGrid(), rotatedPiece, col);

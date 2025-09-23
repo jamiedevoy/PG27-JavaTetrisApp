@@ -38,7 +38,7 @@ public final class SettingsStore {
             }
         }
         // fallback defaults
-        return new GameSettings(10, 1, false, false, false, false, false);
+        return new GameSettings(10, 1, false, false, false, false, false, false);
     }
 
     private void save(GameSettings settings) {
@@ -47,5 +47,8 @@ public final class SettingsStore {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void resetBoardSize() {
     }
 }
