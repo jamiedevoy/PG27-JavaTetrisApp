@@ -16,7 +16,7 @@ public class TetrisAI {
         AIMove bestMove = null;
         int bestScore = Integer.MIN_VALUE;
 
-        int rotationLimit = getRotationLimit(piece);
+        int rotationLimit = getRotationLimit();
 
         for (int rotation = 0; rotation < rotationLimit; rotation++) {
             Tetromino rotatedPiece = TetrominoFactory.copyOf(piece);
