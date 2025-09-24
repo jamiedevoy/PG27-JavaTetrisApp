@@ -1,6 +1,6 @@
 {
-  "fieldSize" : 15,
-  "level" : 1,
+  "fieldSize" : 10,
+  "level" : 2,
   "musicEnabled" : false,
   "soundEffectsEnabled" : false,
   "aiPlayer1Enabled" : false,
