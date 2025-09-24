@@ -14,29 +14,25 @@
     <!-- CENTER: two separate player columns side-by-side -->
     <center>
         <HBox fx:id="playersRow" spacing="20" alignment="CENTER">
-            <!-- PLAYER 1 COLUMN -->
             <VBox fx:id="p1Col" spacing="10" alignment="TOP_CENTER">
-                <Label text="Player 1" styleClass="label-header"/>
+                <Label fx:id="p1NameLabel" text="Player 1" styleClass="label-player-name"/>
                 <StackPane styleClass="neon-wrapper">
                     <Canvas fx:id="gridCanvasP1" width="300" height="600"/>
                 </StackPane>
                 <StackPane styleClass="neon-wrapper">
                     <Canvas fx:id="nextCanvasP1" width="150" height="150" focusTraversable="false"/>
                 </StackPane>
-                <Label fx:id="currentScoreP1" styleClass="label-player-name"/>
-            </VBox>
+                </VBox>
 
-            <!-- PLAYER 2 COLUMN -->
             <VBox fx:id="p2Col" spacing="10" alignment="TOP_CENTER">
-                <Label text="Player 2" styleClass="label-header"/>
+                <Label fx:id="p2NameLabel" text="Player 2" styleClass="label-player-name"/>
                 <StackPane styleClass="neon-wrapper">
                     <Canvas fx:id="gridCanvasP2" width="300" height="600"/>
                 </StackPane>
                 <StackPane styleClass="neon-wrapper">
                     <Canvas fx:id="nextCanvasP2" width="150" height="150" focusTraversable="false"/>
                 </StackPane>
-                <Label fx:id="currentScoreP2" styleClass="label-player-name"/>
-            </VBox>
+                </VBox>
         </HBox>
     </center>
 
@@ -45,13 +41,17 @@
         <VBox spacing="10">
             <!-- P1 attempts -->
             <VBox styleClass="neon-wrapper" alignment="TOP_CENTER" spacing="5">
-                <Label text="P1 Attempt Scores" styleClass="label-header" />
+                <Label fx:id="currentScoreP1" styleClass="label-player-name"/>
+                <Label fx:id="currentLevelP1" styleClass="label-player-name"/>
+                <Label fx:id="p1ScoreLabel" text="P1 Attempt Scores" styleClass="label-player-name" />
                 <ListView fx:id="scoreViewP1" prefHeight="200" styleClass="score-list" focusTraversable="false" />
             </VBox>
 
             <!-- P2 attempts -->
             <VBox fx:id="p2ScoresWrapper" styleClass="neon-wrapper" alignment="TOP_CENTER" spacing="5">
-                <Label text="P2 Attempt Scores" styleClass="label-header" />
+                <Label fx:id="currentScoreP2" styleClass="label-player-name"/>
+                <Label fx:id="currentLevelP2" styleClass="label-player-name"/>
+                <Label fx:id="p2ScoreLabel" text="P2 Attempt Scores" styleClass="label-player-name" />
                 <ListView fx:id="scoreViewP2" prefHeight="200" styleClass="score-list" focusTraversable="false" />
             </VBox>
 

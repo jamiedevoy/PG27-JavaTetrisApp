@@ -41,12 +41,19 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     @FXML private Canvas nextCanvasP1;
     @FXML private Label currentScoreP1;
     @FXML private ListView<ScoreController> scoreViewP1;
+    @FXML private Label currentLevelP1;
+    @FXML private Label p1NameLabel;
+    @FXML private Label p1ScoreLabel;
 
     // P2 canvases & UI
     @FXML private Canvas gridCanvasP2;
     @FXML private Canvas nextCanvasP2;
     @FXML private Label currentScoreP2;
     @FXML private ListView<ScoreController> scoreViewP2;
+    @FXML private Label currentLevelP2;
+    @FXML private Label p2NameLabel;
+    @FXML private Label p2ScoreLabel;
+
 
     @FXML private Button backButton;
 
@@ -103,22 +110,31 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
 
     // keep legacy signature
     public void start(Stage stage, Runnable mainApp, String playerName) {
-        start(stage, mainApp, playerName, false);
+        start(stage, mainApp, playerName, null, false);
     }
 
-    public void start(Stage stage, Runnable mainApp, String playerName, boolean twoPlayer) {
+    public void start(Stage stage, Runnable mainApp, String p1Name, String p2Name, boolean twoPlayer) {
         this.primaryStage = stage;
         this.mainApp = mainApp;
         this.twoPlayerMode = twoPlayer;
         GameSettings settings = SettingsStore.getInstance().get();
+        int initialLevel = settings.level();
         int cols = Math.max(6, settings.fieldSize());
-        int rows = Math.max(12, cols * 2); 
-        gameBoard1 = new GameBoard(twoPlayerMode ? "Player 1" : playerName, cols, rows);
-        gameController1 = new GameController(gameBoard1, false);
+        int rows = Math.max(12, cols * 2);
+
+        gameBoard1 = new GameBoard(p1Name, cols, rows);
+        gameController1 = new GameController(gameBoard1, false, initialLevel);
+        gameBoard1.setGameController(gameController1);
+        gameBoard1.setOnLevelUpCallback(() -> {
+            int newLevel = gameController1.getCurrentLevel() + 1;
+            gameController1.updateFallInterval(newLevel);
+            System.out.println("New Level");
+        });
 
         if (twoPlayerMode) {
-            gameBoard2 = new GameBoard("Player 2", cols, rows);
-            gameController2 = new GameController(gameBoard2, true);
+            gameBoard2 = new GameBoard(p2Name, cols, rows);
+            gameController2 = new GameController(gameBoard2, true, initialLevel);
+            gameBoard2.setGameController(gameController2);
         }
 
         tileSizeP1 = computeTileSizeToFit(gridCanvasP1, cols, rows);
@@ -126,11 +142,22 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
             tileSizeP2 = computeTileSizeToFit(gridCanvasP2, cols, rows);
         }
 
+        p1NameLabel.setText(p1Name);
+        if (twoPlayerMode) {
+            p2NameLabel.setText(p2Name);
+        }
+
+        p1ScoreLabel.setText(p1Name + " Attempts");
+        if (twoPlayerMode) {
+            p2ScoreLabel.setText(p2Name + " Attempts");
+        }
+
         // GCs
         gcP1 = gridCanvasP1.getGraphicsContext2D();
         gcNextP1 = nextCanvasP1.getGraphicsContext2D();
         if (twoPlayerMode) {
             gcP2 = gridCanvasP2.getGraphicsContext2D();
+            // THIS IS THE CORRECTED LINE
             gcNextP2 = nextCanvasP2.getGraphicsContext2D();
         }
 
@@ -217,12 +244,15 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
         drawBoardAndPiece(gameBoard1, gcP1, tileSizeP1);
         drawNextPiece(gcNextP1, gameBoard1, tileSizeP1);
         currentScoreP1.setText("Score: " + gameBoard1.getCurrentScore());
+        currentLevelP1.setText("Level: " + gameController1.getCurrentLevel());
 
         // P2
         if (twoPlayerMode) {
             drawBoardAndPiece(gameBoard2, gcP2, tileSizeP2);
             drawNextPiece(gcNextP2, gameBoard2, tileSizeP2);
             currentScoreP2.setText("Score: " + gameBoard2.getCurrentScore());
+            currentLevelP2.setText("Level: " + gameController2.getCurrentLevel());
+
         }
 
         if (globallyPaused) {

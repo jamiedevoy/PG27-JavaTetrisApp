@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.example.enums.TetrominoType;
+import org.example.controllers.GameController;
 import org.example.interfaces.IGameBoard;
 import org.example.controllers.ScoreController;
 import org.example.interfaces.ScoreUpdateListener;
@@ -18,9 +18,12 @@ public class GameBoard implements IGameBoard {
     // ==== dynamic dimensions (replace old static usage) ====
     private static int gridWidth;
     private static int gridHeight;
-
+    private GameController gameController;
     public int iterationInt = 1;
     public int iterationScore = 0;
+    public int linesErased = 0;
+    public int baseScore = 100;
+    private Runnable onLevelUpCallback;
 
     ArrayList<ScoreController> scores = new ArrayList<>();
     private String playerName;
@@ -44,6 +47,10 @@ public class GameBoard implements IGameBoard {
     /** Original constructor: keeps your default 10x20 board. */
     public GameBoard(String playerName) {
         this(playerName, DEFAULT_GRID_WIDTH, DEFAULT_GRID_HEIGHT);
+    }
+
+    public void setOnLevelUpCallback(Runnable callback) {
+        this.onLevelUpCallback = callback;
     }
 
     /** NEW: explicit (cols x rows) so field size (blocks across) can vary. */
@@ -207,6 +214,7 @@ public class GameBoard implements IGameBoard {
     // ====== row clearing / board reset ======
 
     private void clearFullRows() {
+        int linesClearedThisTurn = 0;
         for (int y = gridHeight - 1; y >= 0; y--) {
             boolean full = true;
             for (int x = 0; x < gridWidth; x++) {
@@ -217,10 +225,28 @@ public class GameBoard implements IGameBoard {
             }
             if (full) {
                 org.example.audio.AudioManager.getInstance().playSfx("/audio/score.wav");
-                iterationScore++;
+                linesErased++;
+                if (iterationScore == 0){
+                    iterationScore = baseScore;
+                } else{
+                    iterationScore = linesErased * baseScore + iterationScore;
+                }
                 System.out.println("Iteration Score:" + iterationScore);
+                linesClearedThisTurn += linesErased;
                 removeRow(y);
-                y++; // re-check the same row index after shifting
+                y++;
+            }
+        }
+
+        if (linesClearedThisTurn > 0) {
+
+            System.out.println("linesClearedThisTurn: " + iterationScore);
+
+            if (linesErased % 3 == 0) {
+                if (onLevelUpCallback != null) {
+                    onLevelUpCallback.run();
+                    System.out.println("triggered level-up");
+                }
             }
         }
     }
@@ -234,11 +260,12 @@ public class GameBoard implements IGameBoard {
         }
     }
 
-    private void clearBoard() {
-        scores.add(new ScoreController(playerName, iterationInt, iterationScore));
+    public void resetGame() {
+        scores.add(new ScoreController(playerName, iterationInt, iterationScore, gameController.getCurrentLevel(), linesErased));
         iterationInt++;
         System.out.println("Attempt Iteration:" + iterationInt);
         iterationScore = 0;
+        linesErased = 0;
         notifyScoreListeners();
         System.out.println("Attempt Count:" + iterationScore);
 
@@ -247,9 +274,15 @@ public class GameBoard implements IGameBoard {
                 grid[y][x] = 0;
             }
         }
+
+        isGameOver = false;
+        currentPiece = null;
+        nextPiece = randomTetromino();
+        spawnNewPiece();
     }
 
     // ====== helpers ======
+
 
     /** Optional: programmatic resize if you ever need it at runtime (not required for your current flow). */
     public void resizeGrid(int cols, int rows) {
@@ -275,6 +308,10 @@ public class GameBoard implements IGameBoard {
 
     public int getCurrentScore() {
         return iterationScore;
+    }
+
+    public void setGameController(GameController controller) {
+        this.gameController = controller;
     }
 
     public ArrayList<ScoreController> getScores() {

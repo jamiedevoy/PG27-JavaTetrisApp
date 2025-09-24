@@ -6,16 +6,12 @@ import org.example.AI.AIMove;
 import org.example.AI.TetrisAI;
 import org.example.external.TetrisClient;
 import org.example.interfaces.IGameBoard;
-import org.example.model.GameBoard;
-import org.example.model.OpMove;
-import org.example.model.PureGame;
-import org.example.model.SettingsStore;
+import org.example.model.*;
 
 import java.io.IOException;
 
 public class GameController extends BaseController {
-    private static final long FALL_INTERVAL_NS = 500_000_000;
-
+    private long fallIntervalNs = 1_500_000_000L;
     private long lastFallTime = 0;
     private boolean paused = false;
 
@@ -25,17 +21,48 @@ public class GameController extends BaseController {
     private final boolean isPlayerOneAI = SettingsStore.getInstance().get().aiPlayer1Enabled();
     private final boolean isPlayerTwoAI = SettingsStore.getInstance().get().aiPlayer2Enabled();
     private final boolean isExternalPlayer = SettingsStore.getInstance().get().extendedModeEnabled();
-
+    private boolean gameOverDialogShown = false;
+    private final int initialLevel;
+    private int currentLevel;
 
     // P1 by default
     public GameController(IGameBoard board) {
-        this(board, false);
+        this(board, false, 1);
     }
 
     // Pass true for Player 2
-    public GameController(IGameBoard board, boolean isPlayerTwo) {
+    public GameController(IGameBoard board, boolean isPlayerTwo, int initialLevel) {
         this.board = board;
         this.isPlayerTwo = isPlayerTwo;
+        this.initialLevel = initialLevel;
+        this.currentLevel = initialLevel;
+        updateFallIntervalFromSettings();
+    }
+
+    private void updateFallIntervalFromSettings() {
+        GameSettings settings = SettingsStore.getInstance().get();
+        int level = this.initialLevel;
+
+        long baseInterval = 1_500_000_000L;
+        long reductionPerLevel = 200_000_000L;
+
+        long newInterval = baseInterval - (level * reductionPerLevel);
+        long minInterval = 50_000_000L;
+        this.fallIntervalNs = Math.max(newInterval, minInterval);
+    }
+
+    public void updateFallInterval(int newLevel) {
+        this.currentLevel = newLevel;
+        long baseInterval = 1_500_000_000L;
+        long reductionPerLevel = 200_000_000L;
+
+        long newInterval = baseInterval - (newLevel * reductionPerLevel);
+        long minInterval = 50_000_000L;
+        this.fallIntervalNs = Math.max(newInterval, minInterval);
+    }
+
+    public int getCurrentLevel() {
+        return this.currentLevel;
     }
 
     public void handleKey(KeyCode code) {
@@ -62,16 +89,17 @@ public class GameController extends BaseController {
     }
 
     public void update(long now) {
+        GameBoard gameBoard = (GameBoard) board;
         if (paused) return;
 
-        if (lastFallTime == 0 || now - lastFallTime > FALL_INTERVAL_NS) {
-            GameBoard gameBoard = (GameBoard) board;
+        if (gameBoard.isGameOver() && !gameOverDialogShown) {
+            paused = true;
+            gameOverDialogShown = true;
+            showGameOverScreen();
+            return;
+        }
 
-            if (gameBoard.isGameOver()) {
-                paused = true;
-                showGameOverScreen();
-                return;
-            }
+        if (lastFallTime == 0 || now - lastFallTime > fallIntervalNs) {
 
             if (gameBoard.getCurrentPiece() == null) {
                 board.tick();
@@ -164,6 +192,14 @@ public class GameController extends BaseController {
             alert.setHeaderText("No more valid moves");
             alert.setContentText("The game has ended. Try again?");
             alert.showAndWait();
+
+
+            GameBoard gameBoard = (GameBoard) board;
+            gameBoard.resetGame();
+
+            paused = false;
+            gameOverDialogShown = false;
+            lastFallTime = System.nanoTime();
         });
     }
 }
