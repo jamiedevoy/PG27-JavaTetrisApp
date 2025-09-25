@@ -75,7 +75,7 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     private GameController gameController2;
 
     // attempt lists
-    private ObservableList<ScoreController> observableScoresP1;
+    ObservableList<ScoreController> observableScoresP1;
     private ObservableList<ScoreController> observableScoresP2;
 
     // Tile size is computed to fit the fixed canvas for the chosen cols/rows
