@@ -10,17 +10,17 @@ public class GameScreen {
 
     // Keep your old signature for backwards compatibility
     public static void show(Stage primaryStage, Runnable mainApp, String playerName) {
-        show(primaryStage, mainApp, playerName, false); // default single-player
+        show(primaryStage, mainApp, playerName, null, false); // default single-player
     }
 
     // NEW overload: supports two-player flag
-    public static void show(Stage primaryStage, Runnable mainApp, String playerName, boolean twoPlayer) {
+    public static void show(Stage primaryStage, Runnable mainApp, String p1Name, String p2Name, boolean twoPlayer) {
         try {
             FXMLLoader loader = new FXMLLoader(GameScreen.class.getResource("/fxml/Game.fxml"));
             Parent root = loader.load();
 
             GameScreenController controller = loader.getController();
-            controller.start(primaryStage, mainApp, playerName, twoPlayer);
+            controller.start(primaryStage, mainApp, p1Name, p2Name, twoPlayer);
 
             Scene scene = new Scene(root);
             primaryStage.setTitle(twoPlayer ? "Tetris - Two Player" : "Tetris");

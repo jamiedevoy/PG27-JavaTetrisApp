@@ -8,10 +8,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class HighScoreManager {
-    private static final String FILE_PATH = "C:\\Users\\HP\\Documents\\Uni\\2006ICT\\java-projects\\PG27-JavaTetrisApp\\highscores.json";
+    private static final String FILE_PATH = System.getProperty("user.home") + File.separator + "highscores.json";
 
     public static void saveScores(List<ScoreController> scores) {
         ObjectMapper mapper = new ObjectMapper();
@@ -22,6 +20,19 @@ public class HighScoreManager {
         } catch (IOException e) {
             e.printStackTrace();
             System.err.println("Error saving high scores.");
+        }
+    }
+
+    public static void clearScores() {
+        ObjectMapper mapper = new ObjectMapper();
+        File file = new File(FILE_PATH);
+
+        try {
+            // i will try and write an empty array which should hopefully clear it
+            mapper.writeValue(file, new ArrayList<>());
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("Error clearing high scores.");
         }
     }
 

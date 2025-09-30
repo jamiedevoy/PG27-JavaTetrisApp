@@ -41,7 +41,7 @@ public final class SettingsStore {
         return new GameSettings(10, 1, false, false, false, false, false, false);
     }
 
-    private void save(GameSettings settings) {
+    public void save(GameSettings settings) {
         try {
             mapper.writerWithDefaultPrettyPrinter().writeValue(new File(SETTINGS_FILE), settings);
         } catch (IOException e) {
