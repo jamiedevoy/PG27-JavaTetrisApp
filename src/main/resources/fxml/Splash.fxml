@@ -8,7 +8,7 @@
 <StackPane  xmlns="http://javafx.com/javafx"
            xmlns:fx="http://javafx.com/fxml"
            fx:controller="org.example.controllers.SplashController"
-           stylesheets="@../Styles.css">
+           stylesheets="@../css/Styles.css">
     <!-- Apply image loaded in Splash controller -->
     <ImageView fx:id="SplashImage" />
     <!-- Splash screen text - key point to have group number, class and project name -->

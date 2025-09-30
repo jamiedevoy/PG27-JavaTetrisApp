@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
-import org.example.Main;
+import org.example.view.Main;
 
 import java.util.Objects;
 

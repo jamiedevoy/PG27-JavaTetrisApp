@@ -51,7 +51,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>org.example.Main</mainClass>
+                    <mainClass>org.example.view.Main</mainClass>
                 </configuration>
                 <!--05/8/25 SC - as per config doco adding execution https://drive.google.com/file/d/1S6dJ4pjDtyvzuFY5wID9uTZva1gUxSZJ/view -->
                 <executions>

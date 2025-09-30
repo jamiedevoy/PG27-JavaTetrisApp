@@ -1,4 +1,4 @@
-package org.example;
+package org.example.view;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -29,6 +29,10 @@ public class GameScreen {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void hide(Stage primaryStage) {
+
     }
 }
 

@@ -1,7 +1,7 @@
 package org.example.interfaces;
 
 import javafx.stage.Stage;
-import org.example.Main;
+import org.example.view.Main;
 
 public interface IController {
     void initialize();

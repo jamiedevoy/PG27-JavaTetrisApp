@@ -4,6 +4,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
 import org.example.AI.AIMove;
 import org.example.AI.TetrisAI;
+import org.example.view.GameOverScreen;
 import org.example.external.TetrisClient;
 import org.example.interfaces.IGameBoard;
 import org.example.model.GameBoard;
@@ -158,6 +159,8 @@ public class GameController extends BaseController {
     }
 
     private void showGameOverScreen() {
+        GameOverScreen gameOverScreen = new GameOverScreen();
+        gameOverScreen.show(primaryStage);
         javafx.application.Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.INFORMATION);
             alert.setTitle("Game Over");

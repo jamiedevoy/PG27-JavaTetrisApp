@@ -1,4 +1,4 @@
-package org.example;
+package org.example.view;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;

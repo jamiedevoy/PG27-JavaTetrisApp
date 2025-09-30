@@ -1,6 +1,5 @@
-package org.example;
+package org.example.view;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,17 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import org.example.controllers.HighScoreManager;
 import org.example.controllers.ScoreController;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 import java.util.List;
 

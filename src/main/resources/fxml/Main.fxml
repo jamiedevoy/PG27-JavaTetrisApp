@@ -4,19 +4,18 @@
 <?import javafx.scene.layout.*?>
 
 <!-- Verticel box holding screen elements -->
-<VBox alignment="CENTER" spacing="20"
-      xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="org.example.controllers.MainController"
-      fx:id="menuLayout"
-      stylesheets="@../Styles.css"
-      prefWidth="400" prefHeight="300">
+
+<VBox alignment="CENTER" prefHeight="300"
+      prefWidth="400" spacing="20"
+      stylesheets="@../css/Styles.css"
+      xmlns="http://javafx.com/javafx/17.0.12"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="org.example.controllers.MainController">
 
     <!-- Setting button ids for reference in MainController -->
-    <Button fx:id="playButton" text="Play"/>
-    <Button fx:id="configButton" text="Configuration"/>
-    <Button fx:id="highScoresButton" text="High Scores"/>
-    <Button fx:id="exitButton" text="Exit"/>
+    <Button fx:id="playButton" text="Play" />
+    <Button fx:id="configButton" text="Configuration" />
+    <Button fx:id="highScoresButton" text="High Scores" />
+    <Button fx:id="exitButton" text="Exit" />
 
 </VBox>
-
