@@ -2,6 +2,7 @@ package org.example.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.example.view.ConfigScreen;
 import org.example.view.GameScreen;
@@ -17,6 +18,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public class MainController extends BaseController {
 
+    @FXML public VBox menuLayout;
     @FXML private Button playButton;
     @FXML private Button configButton;
     @FXML private Button highScoresButton;

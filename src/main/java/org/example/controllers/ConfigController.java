@@ -2,10 +2,12 @@ package org.example.controllers;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.example.model.GameSettings;
 
 public class ConfigController extends BaseController {
+    @FXML StackPane gameLayout;
     @FXML private Slider fieldSizeSlider;
     @FXML private Label fieldSizeValue;
     @FXML private Slider levelSlider;

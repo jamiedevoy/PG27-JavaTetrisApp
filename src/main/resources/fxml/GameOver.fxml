@@ -5,7 +5,13 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<StackPane fx:id="clearLayout" stylesheets="@../Styles.css" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane stylesheets="@../css/Styles.css"
+           styleClass="OverlayLayout"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.example.controllers.GOController">
+
+    <!-- -->
     <VBox alignment="CENTER">
         <Label text="Label" textAlignment="CENTER">
          <font>
@@ -24,19 +30,19 @@
                         <Font size="24.0" />
                     </font>
                 </Label>
-                <Label styleClass="gameLabels" text="0" />
+                <Label fx:id="scoreLabel" styleClass="gameLabels" text="0" />
                 <Label styleClass="gameLabels" text="Level:">
                     <font>
                         <Font size="24.0" />
                     </font>
                 </Label>
-                <Label styleClass="gameLabels" text="0" />
+                <Label fx:id="levelLabel" styleClass="gameLabels" text="0" />
                 <Label styleClass="gameLabels" text="Lines Cleared:">
                     <font>
                         <Font size="24.0" />
                     </font>
                 </Label>
-                <Label styleClass="gameLabels" text="0" />
+                <Label fx:id="linesClearedLabel" styleClass="gameLabels" text="0" />
             </VBox>
          <VBox.margin>
             <Insets bottom="50.0" left="50.0" right="50.0" top="50.0" />

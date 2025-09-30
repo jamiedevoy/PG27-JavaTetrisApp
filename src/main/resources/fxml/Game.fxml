@@ -5,62 +5,64 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="gameLayout"
-            stylesheets="@../Styles.css"
-            xmlns="http://javafx.com/javafx/17.0.12"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="org.example.controllers.GameScreenController">
 
-    <!-- CENTER: two separate player columns side-by-side -->
-    <center>
-        <HBox fx:id="playersRow" spacing="20" alignment="CENTER">
-            <VBox fx:id="p1Col" spacing="10" alignment="TOP_CENTER">
-                <Label fx:id="p1NameLabel" text="Player 1" styleClass="label-player-name"/>
-                <StackPane styleClass="neon-wrapper">
-                    <Canvas fx:id="gridCanvasP1" width="300" height="600"/>
-                </StackPane>
-                <StackPane styleClass="neon-wrapper">
-                    <Canvas fx:id="nextCanvasP1" width="150" height="150" focusTraversable="false"/>
-                </StackPane>
+<StackPane stylesheets="@../css/Styles.css"
+           xmlns="http://javafx.com/javafx/17.0.12"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="org.example.controllers.GameScreenController">
+    <BorderPane fx:id="gameLayout">
+
+        <!-- CENTER: two separate player columns side-by-side -->
+        <center>
+            <HBox fx:id="playersRow" alignment="CENTER" spacing="20">
+                <VBox fx:id="p1Col" alignment="TOP_CENTER" spacing="10">
+                    <Label fx:id="p1NameLabel" styleClass="label-player-name" text="Player 1"/>
+                    <StackPane styleClass="neon-wrapper">
+                        <Canvas fx:id="gridCanvasP1" height="600" width="300"/>
+                    </StackPane>
+                    <StackPane styleClass="neon-wrapper">
+                        <Canvas fx:id="nextCanvasP1" focusTraversable="false" height="150" width="150"/>
+                    </StackPane>
                 </VBox>
 
-            <VBox fx:id="p2Col" spacing="10" alignment="TOP_CENTER">
-                <Label fx:id="p2NameLabel" text="Player 2" styleClass="label-player-name"/>
-                <StackPane styleClass="neon-wrapper">
-                    <Canvas fx:id="gridCanvasP2" width="300" height="600"/>
-                </StackPane>
-                <StackPane styleClass="neon-wrapper">
-                    <Canvas fx:id="nextCanvasP2" width="150" height="150" focusTraversable="false"/>
-                </StackPane>
+                <VBox fx:id="p2Col" alignment="TOP_CENTER" spacing="10">
+                    <Label fx:id="p2NameLabel" styleClass="label-player-name" text="Player 2"/>
+                    <StackPane styleClass="neon-wrapper">
+                        <Canvas fx:id="gridCanvasP2" height="600" width="300"/>
+                    </StackPane>
+                    <StackPane styleClass="neon-wrapper">
+                        <Canvas fx:id="nextCanvasP2" focusTraversable="false" height="150" width="150"/>
+                    </StackPane>
                 </VBox>
-        </HBox>
-    </center>
+            </HBox>
+        </center>
 
-    <!-- RIGHT: attempts lists + back button -->
-    <right>
-        <VBox spacing="10">
-            <!-- P1 attempts -->
-            <VBox styleClass="neon-wrapper" alignment="TOP_CENTER" spacing="5">
-                <Label fx:id="currentScoreP1" styleClass="label-player-name"/>
-                <Label fx:id="currentLevelP1" styleClass="label-player-name"/>
-                <Label fx:id="p1ScoreLabel" text="P1 Attempt Scores" styleClass="label-player-name" />
-                <ListView fx:id="scoreViewP1" prefHeight="200" styleClass="score-list" focusTraversable="false" />
+        <!-- RIGHT: attempts lists + back button -->
+        <right>
+            <VBox spacing="10">
+                <!-- P1 attempts -->
+                <VBox alignment="TOP_CENTER" spacing="5" styleClass="neon-wrapper">
+                    <Label fx:id="currentScoreP1" styleClass="label-player-name"/>
+                    <Label fx:id="currentLevelP1" styleClass="label-player-name"/>
+                    <Label fx:id="p1ScoreLabel" styleClass="label-player-name" text="P1 Attempt Scores"/>
+                    <ListView fx:id="scoreViewP1" focusTraversable="false" prefHeight="200" styleClass="score-list"/>
+                </VBox>
+
+                <!-- P2 attempts -->
+                <VBox fx:id="p2ScoresWrapper" alignment="TOP_CENTER" spacing="5" styleClass="neon-wrapper">
+                    <Label fx:id="currentScoreP2" styleClass="label-player-name"/>
+                    <Label fx:id="currentLevelP2" styleClass="label-player-name"/>
+                    <Label fx:id="p2ScoreLabel" styleClass="label-player-name" text="P2 Attempt Scores"/>
+                    <ListView fx:id="scoreViewP2" focusTraversable="false" prefHeight="200" styleClass="score-list"/>
+                </VBox>
+
+                <Button fx:id="backButton" focusTraversable="false" text="Back to Menu"/>
+
+                <BorderPane.margin>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+                </BorderPane.margin>
             </VBox>
+        </right>
 
-            <!-- P2 attempts -->
-            <VBox fx:id="p2ScoresWrapper" styleClass="neon-wrapper" alignment="TOP_CENTER" spacing="5">
-                <Label fx:id="currentScoreP2" styleClass="label-player-name"/>
-                <Label fx:id="currentLevelP2" styleClass="label-player-name"/>
-                <Label fx:id="p2ScoreLabel" text="P2 Attempt Scores" styleClass="label-player-name" />
-                <ListView fx:id="scoreViewP2" prefHeight="200" styleClass="score-list" focusTraversable="false" />
-            </VBox>
-
-            <Button fx:id="backButton" text="Back to Menu" focusTraversable="false"/>
-
-            <BorderPane.margin>
-                <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
-            </BorderPane.margin>
-        </VBox>
-    </right>
-
-</BorderPane>
+    </BorderPane>
+</StackPane>

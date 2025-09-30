@@ -317,4 +317,12 @@ public class GameBoard implements IGameBoard {
     public ArrayList<ScoreController> getScores() {
         return scores;
     }
+
+    public int getLevel() {
+        return iterationScore;
+    }
+
+    public int getLinesCleared () {
+        return linesErased;
+    }
 }

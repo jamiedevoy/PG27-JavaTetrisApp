@@ -1,10 +1,9 @@
 package org.example.controllers;
 
-import javafx.scene.control.Alert;
 import javafx.scene.input.KeyCode;
+import javafx.stage.Stage;
 import org.example.AI.AIMove;
 import org.example.AI.TetrisAI;
-import org.example.view.GameOverScreen;
 import org.example.external.TetrisClient;
 import org.example.interfaces.IGameBoard;
 import org.example.model.*;
@@ -22,19 +21,21 @@ public class GameController extends BaseController {
     private final boolean isPlayerOneAI = SettingsStore.getInstance().get().aiPlayer1Enabled();
     private final boolean isPlayerTwoAI = SettingsStore.getInstance().get().aiPlayer2Enabled();
     private final boolean isExternalPlayer = SettingsStore.getInstance().get().extendedModeEnabled();
+    private final GameScreenController screenController;
     private boolean gameOverDialogShown = false;
     private final int initialLevel;
     private int currentLevel;
 
     // P1 by default
-    public GameController(IGameBoard board) {
-        this(board, false, 1);
+    public GameController(IGameBoard board, Stage primaryStage, GameScreenController screenController) {
+        this(board, false, 1, screenController);
     }
 
     // Pass true for Player 2
-    public GameController(IGameBoard board, boolean isPlayerTwo, int initialLevel) {
+    public GameController(IGameBoard board, boolean isPlayerTwo, int initialLevel, GameScreenController screenController) {
         this.board = board;
         this.isPlayerTwo = isPlayerTwo;
+        this.screenController = screenController;
         this.initialLevel = initialLevel;
         this.currentLevel = initialLevel;
         updateFallIntervalFromSettings();
@@ -42,12 +43,11 @@ public class GameController extends BaseController {
 
     private void updateFallIntervalFromSettings() {
         GameSettings settings = SettingsStore.getInstance().get();
-        int level = this.initialLevel;
 
         long baseInterval = 1_500_000_000L;
         long reductionPerLevel = 200_000_000L;
 
-        long newInterval = baseInterval - (level * reductionPerLevel);
+        long newInterval = baseInterval - (this.initialLevel * reductionPerLevel);
         long minInterval = 50_000_000L;
         this.fallIntervalNs = Math.max(newInterval, minInterval);
     }
@@ -96,7 +96,13 @@ public class GameController extends BaseController {
         if (gameBoard.isGameOver() && !gameOverDialogShown) {
             paused = true;
             gameOverDialogShown = true;
-            showGameOverScreen();
+            javafx.application.Platform.runLater(() -> {
+                screenController.showGameOverOverlay(
+                        gameBoard.getCurrentScore(),
+                        gameBoard.getLevel(),
+                        gameBoard.getLinesCleared());
+            });
+
             return;
         }
 
@@ -158,7 +164,6 @@ public class GameController extends BaseController {
             if (gameBoard.getCurrentPiece() != null) {
                 board.tick();
                 lastFallTime = now;
-                return;
             }
         }
     }
@@ -184,25 +189,5 @@ public class GameController extends BaseController {
         for (int i = 0; i < Math.abs(dx); i++) {
             board.move(dx < 0 ? -1 : 1, 0);
         }
-    }
-
-    private void showGameOverScreen() {
-        GameOverScreen gameOverScreen = new GameOverScreen();
-        gameOverScreen.show(primaryStage);
-        javafx.application.Platform.runLater(() -> {
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Game Over");
-            alert.setHeaderText("No more valid moves");
-            alert.setContentText("The game has ended. Try again?");
-            alert.showAndWait();
-
-
-            GameBoard gameBoard = (GameBoard) board;
-            gameBoard.resetGame();
-
-            paused = false;
-            gameOverDialogShown = false;
-            lastFallTime = System.nanoTime();
-        });
     }
 }

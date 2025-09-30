@@ -12,6 +12,10 @@
     -fx-background-color: black;
 }
 
+#overlayLayout {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+}
+
 /* Styles Splash screen Text - See splash.fxml to alter text */
 #splashLabel {
     -fx-text-fill: white;
@@ -146,4 +150,4 @@
 }
 .border-pane-background {
     -fx-background-color: #000000;
-
+}

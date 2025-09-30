@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
@@ -13,6 +14,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -22,6 +24,7 @@ import org.example.model.GameBoard;
 import org.example.model.GameSettings;
 import org.example.model.SettingsStore;
 import org.example.model.Tetromino;
+import org.example.view.GameOverScreen;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,7 +126,7 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
         int rows = Math.max(12, cols * 2);
 
         gameBoard1 = new GameBoard(p1Name, cols, rows);
-        gameController1 = new GameController(gameBoard1, false, initialLevel);
+        gameController1 = new GameController(gameBoard1, false, initialLevel, this);
         gameBoard1.setGameController(gameController1);
         gameBoard1.setOnLevelUpCallback(() -> {
             int newLevel = gameController1.getCurrentLevel() + 1;
@@ -133,7 +136,7 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
 
         if (twoPlayerMode) {
             gameBoard2 = new GameBoard(p2Name, cols, rows);
-            gameController2 = new GameController(gameBoard2, true, initialLevel);
+            gameController2 = new GameController(gameBoard2, true, initialLevel, this);
             gameBoard2.setGameController(gameController2);
         }
 
@@ -343,5 +346,18 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     private void onScoreUpdatedP2(ArrayList<ScoreController> newScores) {
         if (observableScoresP2 == null) return;
         Platform.runLater(() -> observableScoresP2.setAll(newScores));
+    }
+
+    public void showGameOverOverlay(int score, int level, int linesCleared) {
+        GameOverScreen gameOverScreen = new GameOverScreen();
+        Parent overlayRoot = gameOverScreen.getOverlay(score, level, linesCleared);
+
+        StackPane overlay = new StackPane(overlayRoot);
+
+        overlay.setPrefSize(gameLayout.getWidth(), gameLayout.getHeight());
+        overlay.prefWidthProperty().bind(gameLayout.widthProperty());
+        overlay.prefHeightProperty().bind(gameLayout.heightProperty());
+
+        gameLayout.getChildren().add(overlay);
     }
 }
