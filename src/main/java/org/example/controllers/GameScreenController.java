@@ -31,7 +31,7 @@ import java.util.List;
 
 public class GameScreenController extends BaseController implements ScoreUpdateListener<ScoreController> {
 
-    @FXML private BorderPane gameLayout;
+    @FXML private StackPane gameLayout;
 
     // Layout nodes to toggle for 1P vs 2P
     @FXML private HBox playersRow;
@@ -56,8 +56,6 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     @FXML private Label currentLevelP2;
     @FXML private Label p2NameLabel;
     @FXML private Label p2ScoreLabel;
-
-
     @FXML private Button backButton;
 
     // GCs
@@ -181,23 +179,7 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
             gameBoard2.addScoreUpdateListener(this::onScoreUpdatedP2);
         }
 
-        backButton.setOnAction(e -> {
-            List<ScoreController> allScores =
-                    java.util.stream.Stream.<java.util.List<ScoreController>>of(
-                                    gameBoard1.getScores(),
-                                    (twoPlayerMode && gameBoard2 != null) ? gameBoard2.getScores() : java.util.List.of(),
-                                    HighScoreManager.loadScores()
-                            )
-                            .flatMap(java.util.List::stream)
-                            .sorted(java.util.Comparator.comparingInt(ScoreController::getScore).reversed())
-                            .toList();
-
-            HighScoreManager.saveScores(allScores);
-            SettingsStore.getInstance().resetBoardSize();
-            try { org.example.audio.AudioManager.getInstance().stopMusic(); } catch (Throwable ignored) {}
-
-            mainApp.run();
-        });
+        backButton.setOnAction(e -> {leaveToMain();});
 
         // Focus & keys
         Platform.runLater(() -> gridCanvasP1.requestFocus());
@@ -351,13 +333,27 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     public void showGameOverOverlay(int score, int level, int linesCleared) {
         GameOverScreen gameOverScreen = new GameOverScreen();
         Parent overlayRoot = gameOverScreen.getOverlay(score, level, linesCleared);
+        gameLayout.getChildren().add(overlayRoot);
+    }
+    
+    public void leaveToMain() {
+        List<ScoreController> allScores =
+                java.util.stream.Stream.<java.util.List<ScoreController>>of(
+                                gameBoard1.getScores(),
+                                (twoPlayerMode && gameBoard2 != null) ? gameBoard2.getScores() : java.util.List.of(),
+                                HighScoreManager.loadScores()
+                        )
+                        .flatMap(java.util.List::stream)
+                        .sorted(java.util.Comparator.comparingInt(ScoreController::getScore).reversed())
+                        .toList();
 
-        StackPane overlay = new StackPane(overlayRoot);
+        HighScoreManager.saveScores(allScores);
+        SettingsStore.getInstance().resetBoardSize();
+        try { org.example.audio.AudioManager.getInstance().stopMusic(); } catch (Throwable ignored) {}
 
-        overlay.setPrefSize(gameLayout.getWidth(), gameLayout.getHeight());
-        overlay.prefWidthProperty().bind(gameLayout.widthProperty());
-        overlay.prefHeightProperty().bind(gameLayout.heightProperty());
+        mainApp.run();
+    }
 
-        gameLayout.getChildren().add(overlay);
+    public void resetGame() {
     }
 }

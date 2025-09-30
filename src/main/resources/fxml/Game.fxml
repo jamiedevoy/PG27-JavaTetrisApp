@@ -6,11 +6,11 @@
 <?import javafx.scene.layout.*?>
 
 
-<StackPane stylesheets="@../css/Styles.css"
+<StackPane stylesheets="@../css/Styles.css" fx:id="gameLayout"
            xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.example.controllers.GameScreenController">
-    <BorderPane fx:id="gameLayout">
+    <BorderPane>
 
         <!-- CENTER: two separate player columns side-by-side -->
         <center>

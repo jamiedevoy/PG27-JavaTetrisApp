@@ -8,8 +8,6 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.example.interfaces.IScreen;
 import org.example.controllers.GOController;
-import org.example.model.PureGame;
-
 import java.io.IOException;
 
 public class GameOverScreen implements IScreen {
@@ -67,8 +65,8 @@ public class GameOverScreen implements IScreen {
 
             StackPane overlay = new StackPane(overlayRoot);
             overlay.setAlignment(Pos.CENTER);
-            overlay.prefWidthProperty().bind(controller.gameLayout.widthProperty());
-            overlay.prefHeightProperty().bind(controller.gameLayout.heightProperty());
+            //overlay.prefWidthProperty().bind(controller.gameLayout.widthProperty());
+            //overlay.prefHeightProperty().bind(controller.gameLayout.heightProperty());
 
             return overlay;
         } catch (IOException e) {

@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 
 <StackPane stylesheets="@../css/Styles.css"
-           styleClass="OverlayLayout"
+           styleClass=""
            xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.example.controllers.GOController">
@@ -49,12 +49,12 @@
          </VBox.margin>
         </StackPane>
         <HBox alignment="CENTER">
-            <Button mnemonicParsing="false" text="Main Menu">
+            <Button fx:id="toMainBTN" mnemonicParsing="false" text="Main Menu">
                 <HBox.margin>
                     <Insets right="10.0" />
                 </HBox.margin>
             </Button>
-            <Button mnemonicParsing="false" text="Replay">
+            <Button fx:id="replayBTN" mnemonicParsing="false" text="Replay">
                 <HBox.margin>
                     <Insets left="10.0" />
                 </HBox.margin>
