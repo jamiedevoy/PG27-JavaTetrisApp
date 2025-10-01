@@ -75,6 +75,9 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     private GameBoard gameBoard2;
     private GameController gameController2;
 
+    // Game over
+    private GameOverScreen gameOverScreen = new GameOverScreen();
+
     // attempt lists
     ObservableList<ScoreController> observableScoresP1;
     private ObservableList<ScoreController> observableScoresP2;
@@ -331,8 +334,8 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     }
 
     public void showGameOverOverlay(int score, int level, int linesCleared) {
-        GameOverScreen gameOverScreen = new GameOverScreen();
-        Parent overlayRoot = gameOverScreen.getOverlay(score, level, linesCleared);
+        //GameOverScreen gameOverScreen = new GameOverScreen();
+        Parent overlayRoot = gameOverScreen.getOverlay(score, level, linesCleared, this);
         gameLayout.getChildren().add(overlayRoot);
     }
     
@@ -355,5 +358,25 @@ public class GameScreenController extends BaseController implements ScoreUpdateL
     }
 
     public void resetGame() {
+        gameBoard1.resetGame();
+        if (gameBoard2 != null) {
+            gameBoard2.resetGame();
+        }
+
+        // assuming overlay is the last added child of the game layout stackpane
+        if (gameLayout.getChildren().size() > 1) {
+            gameLayout.getChildren().removeLast();
+        }
+
+        // unpause game
+        gameController1.setPaused(false);
+        if (twoPlayerMode && gameController2 != null) {
+            gameController2.setPaused(false);
+        }
+
+        gameController1.setGameOverDialogShown(false);
+        if (twoPlayerMode && gameController2 != null) {
+            gameController2.setGameOverDialogShown(false);
+        }
     }
 }

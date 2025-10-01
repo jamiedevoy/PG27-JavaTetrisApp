@@ -12,11 +12,12 @@ public class GOController extends BaseController {
 
     @FXML public Button toMainBTN;
     @FXML public Button replayBTN;
+    public StackPane overlayLayout;
     @FXML private Label scoreLabel;
     @FXML private Label levelLabel;
     @FXML private Label linesClearedLabel;
 
-    void initialize(GameScreenController gameScreenController) {
+    public void initialize(GameScreenController gameScreenController) {
         toMainBTN.setOnAction(e -> gameScreenController.leaveToMain());
         replayBTN.setOnAction(e -> gameScreenController.resetGame());
     }
@@ -26,6 +27,4 @@ public class GOController extends BaseController {
         levelLabel.setText(Integer.toString(level));
         linesClearedLabel.setText(Integer.toString(linesCleared));
     }
-
-
 }

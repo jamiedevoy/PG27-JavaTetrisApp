@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.example.controllers.GameScreenController;
 import org.example.interfaces.IScreen;
 import org.example.controllers.GOController;
 import java.io.IOException;
@@ -55,13 +56,14 @@ public class GameOverScreen implements IScreen {
 
     }
 
-    public Parent getOverlay(int score, int level, int linesCleared) {
+    public Parent getOverlay(int score, int level, int linesCleared, GameScreenController gameScreenController) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/GameOver.fxml"));
             Parent overlayRoot = loader.load();
 
             GOController controller = loader.getController();
             controller.setStats(score, level, linesCleared);
+            controller.initialize(gameScreenController);
 
             StackPane overlay = new StackPane(overlayRoot);
             overlay.setAlignment(Pos.CENTER);

@@ -6,7 +6,7 @@
 <?import javafx.scene.text.*?>
 
 <StackPane stylesheets="@../css/Styles.css"
-           styleClass=""
+           fx:id="overlayLayout"
            xmlns="http://javafx.com/javafx/17.0.12"
            xmlns:fx="http://javafx.com/fxml/1"
            fx:controller="org.example.controllers.GOController">

@@ -31,7 +31,7 @@ public class SplashController extends BaseController {
         Task<Void> loadTask = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                Thread.sleep(10); // 3000
+                Thread.sleep(3000); // 3000
                 return null;
             }
 

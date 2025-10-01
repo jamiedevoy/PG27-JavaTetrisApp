@@ -152,12 +152,12 @@ public class GameController extends BaseController {
             }
 
             // Player 1 is an AI
-            if (!isPlayerTwo && isPlayerOneAI && !isExternalPlayer) {
+            if (!paused && !isPlayerTwo && isPlayerOneAI && !isExternalPlayer) {
                 applyLocalAIMove(gameBoard);
             }
 
             // Player Two is an AI
-            if (isPlayerTwo && isPlayerTwoAI) {
+            if (!paused && isPlayerTwo && isPlayerTwoAI) {
                 applyLocalAIMove(gameBoard);
             }
 
@@ -189,5 +189,9 @@ public class GameController extends BaseController {
         for (int i = 0; i < Math.abs(dx); i++) {
             board.move(dx < 0 ? -1 : 1, 0);
         }
+    }
+
+    public void setGameOverDialogShown(boolean shown) {
+        this.gameOverDialogShown = shown;
     }
 }
